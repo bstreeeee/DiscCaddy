@@ -54,6 +54,7 @@
     };
   })();
 </script>
+<script src="./disc-database.js"></script>
 <script>
 (() => {
   var __create = Object.create;
@@ -23527,7 +23528,7 @@
       replaces: closest && closest.sim >= 82 ? closest.disc : null
     };
   }
-  var KNOWN_DISCS = [
+  var KNOWN_DISCS = window.DISC_CATALOG || [
     ["Zone", "Discraft", 4, 3, 0, 3],
     ["Harp", "Westside", 4, 3, 0, 3],
     ["Berg", "Kastaplast", 1, 1, 0, 2],
@@ -23566,6 +23567,17 @@
     ["Raider", "Dynamic Discs", 13, 5, -0.5, 3],
     ["Ballista Pro", "Latitude 64", 14, 4, 0, 3]
   ].map(([name, brand, speed, glide, turn, fade]) => ({ name, brand, speed, glide, turn, fade }));
+  function normalizeDiscText(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  }
+  function discSearchTerms(disc) {
+    return [disc.name, disc.brand || "", ...(disc.aliases || [])].map(normalizeDiscText).filter(Boolean);
+  }
+  function findKnownDisc(query) {
+    const q = normalizeDiscText(query);
+    if (!q) return null;
+    return KNOWN_DISCS.find((d) => discSearchTerms(d).includes(q)) || KNOWN_DISCS.find((d) => discSearchTerms(d).some((term) => term.includes(q) || q.includes(term)));
+  }
   function parseCandidateInput(raw) {
     const text = raw.trim();
     if (!text) return null;
@@ -23576,7 +23588,7 @@
       if (speed >= 1 && speed <= 15) return { name: `Custom ${speed}/${glide}/${turn}/${fade}`, brand: "", speed, glide, turn, fade };
     }
     const q = text.toLowerCase();
-    const hit = KNOWN_DISCS.find((d) => d.name.toLowerCase() === q) || KNOWN_DISCS.find((d) => d.name.toLowerCase().includes(q) || q.includes(d.name.toLowerCase()));
+    const hit = findKnownDisc(q);
     return hit ? { ...hit } : { unknown: true, query: text };
   }
   var RING_FOR_STAB = { understable: "#22A85A", neutral: "#3E76AB", stable: "#D0721E", overstable: "#C23B3B" };

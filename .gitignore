@@ -4,3 +4,5 @@ dist/
 build/
 .env
 .env.*
+codex_github_key
+codex_github_key.pub
