@@ -13,9 +13,11 @@
 <!-- Tailwind (JIT, via CDN). Requires internet on first load; browser will cache it after. -->
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  html, body { margin: 0; padding: 0; background: #070A08; }
+  html, body { margin: 0; padding: 0; background: #070A08; color: #FFFFFF; }
   #root { min-height: 100vh; min-height: 100dvh; }
+  .theme-dark { color: #FFFFFF; }
   .theme-light {
+    color: var(--dc-text);
     --dc-text: #14211a;
     --dc-text-strong: #0b120d;
     --dc-muted: rgba(20, 33, 26, 0.66);
@@ -31,6 +33,7 @@
     --dc-svg-soft: rgba(20, 33, 26, 0.16);
     --dc-svg-faint: rgba(20, 33, 26, 0.11);
   }
+  .theme-light .text-white { color: var(--dc-text) !important; }
   .theme-light [class*="text-white"] { color: var(--dc-text) !important; }
   .theme-light [class*="bg-white/"] { background-color: var(--dc-surface) !important; }
   .theme-light [class*="border-white/"] { border-color: var(--dc-border) !important; }
@@ -22569,7 +22572,7 @@
       setAnswers({});
       setStep(0);
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `${isLight ? "theme-light" : "theme-dark"} min-h-screen text-white`, style: { ...themeVars, ...pageStyle, fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif" }, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `${isLight ? "theme-light" : "theme-dark"} min-h-screen`, style: { ...themeVars, ...pageStyle, color: "var(--dc-text)", fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif" }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("style", { children: `
         @keyframes drawLine { to { stroke-dashoffset: 0; } }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
