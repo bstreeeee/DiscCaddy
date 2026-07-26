@@ -23573,10 +23573,30 @@
   function discSearchTerms(disc) {
     return [disc.name, disc.brand || "", ...(disc.aliases || [])].map(normalizeDiscText).filter(Boolean);
   }
-  function findKnownDisc(query) {
+  function scoreDiscMatch(query, disc) {
     const q = normalizeDiscText(query);
-    if (!q) return null;
-    return KNOWN_DISCS.find((d) => discSearchTerms(d).includes(q)) || KNOWN_DISCS.find((d) => discSearchTerms(d).some((term) => term.includes(q) || q.includes(term)));
+    if (!q || q.length < 2) return 0;
+    let score = 0;
+    for (const term of discSearchTerms(disc)) {
+      const tokens = term.split(" ");
+      if (term === q) score = Math.max(score, 200);
+      if (term.startsWith(q)) score = Math.max(score, 160);
+      if (tokens.includes(q)) score = Math.max(score, 155);
+      if (tokens.some((token) => token.startsWith(q))) score = Math.max(score, 135);
+      if (q.length >= 4 && tokens.some((token) => token.includes(q))) score = Math.max(score, 95);
+    }
+    return score;
+  }
+  function findKnownDiscMatches(query, limit = 5) {
+    const q = normalizeDiscText(query);
+    if (!q) return [];
+    if (q.length === 1) {
+      return KNOWN_DISCS.filter((d) => discSearchTerms(d).some((term) => term.split(" ").includes(q))).slice(0, limit).map((disc) => ({ disc, score: 200 }));
+    }
+    return KNOWN_DISCS.map((disc) => ({ disc, score: scoreDiscMatch(q, disc) }))
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score || a.disc.name.localeCompare(b.disc.name))
+      .slice(0, limit);
   }
   function parseCandidateInput(raw) {
     const text = raw.trim();
@@ -23587,9 +23607,10 @@
       const [speed, glide, turn, fade] = nums.slice(0, 4).map(Number);
       if (speed >= 1 && speed <= 15) return { name: `Custom ${speed}/${glide}/${turn}/${fade}`, brand: "", speed, glide, turn, fade };
     }
-    const q = text.toLowerCase();
-    const hit = findKnownDisc(q);
-    return hit ? { ...hit } : { unknown: true, query: text };
+    const matches = findKnownDiscMatches(text);
+    if (matches.length === 1 && matches[0].score >= 135) return { ...matches[0].disc };
+    if (matches.length > 1) return { ambiguous: true, query: text, matches: matches.map((m) => m.disc) };
+    return { unknown: true, query: text };
   }
   var RING_FOR_STAB = { understable: "#22A85A", neutral: "#3E76AB", stable: "#D0721E", overstable: "#C23B3B" };
   var BAND_RANGE = {
@@ -23658,6 +23679,10 @@
     const analyze = () => {
       const cand = parseCandidateInput(query);
       if (!cand) return;
+      if (cand.ambiguous) {
+        setResult({ ambiguous: true, query: cand.query, matches: cand.matches });
+        return;
+      }
       if (cand.unknown) {
         setResult({ unknown: true, query: cand.query });
         return;
@@ -23810,6 +23835,40 @@
           result.query,
           `" \u2014 enter its four flight numbers instead (like "9 5 -1 2") and I'll evaluate it.`
         ] }),
+        result && result.ambiguous && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mt-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { className: "text-sm text-white/60 mb-2", children: [
+            `I found more than one match for "`,
+            result.query,
+            `" \u2014 pick the exact disc.`
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "grid gap-2", children: result.matches.map((match) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+            "button",
+            {
+              onClick: () => setResult({ cand: match, evalr: evaluateCandidate(match, bag) }),
+              className: "w-full text-left px-4 py-3 rounded-2xl bg-white/5 border border-white/10 active:scale-[0.99]",
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "min-w-0", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "font-semibold truncate", children: match.name }),
+                    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-xs text-white/45 truncate", children: [
+                      match.brand,
+                      " ",
+                      match.speed,
+                      "/",
+                      match.glide,
+                      "/",
+                      match.turn,
+                      "/",
+                      match.fade
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-xs text-white/35 shrink-0", children: "Choose" })
+                ] })
+              ]
+            },
+            match.id
+          )) })
+        ] }),
         result && result.evalr && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CandidateResult, { cand: result.cand, evalr: result.evalr }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
@@ -23839,6 +23898,10 @@
       setPreview(null);
       const cand = parseCandidateInput(query);
       if (!cand) return;
+      if (cand.ambiguous) {
+        setPreview({ ambiguous: true, query: cand.query, matches: cand.matches });
+        return;
+      }
       if (cand.unknown) {
         setNotFound(true);
         return;
@@ -23861,6 +23924,40 @@
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: lookup, className: "px-5 py-3 rounded-2xl font-bold text-sm active:scale-95 border border-white/15 text-white/70 active:scale-95", children: "Find" })
       ] }),
       notFound && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-sm text-white/60 mt-3", children: `Don't recognize that name \u2014 try its flight numbers instead, like "9 5 -1 2".` }),
+      preview && preview.ambiguous && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mt-3", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { className: "text-sm text-white/60 mb-2", children: [
+          `I found more than one match for "`,
+          preview.query,
+          `" \u2014 pick one.`
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "grid gap-2", children: preview.matches.map((match) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+          "button",
+          {
+            onClick: () => setPreview({ cand: match, evalr: evaluateCandidate(match, bag) }),
+            className: "w-full text-left px-4 py-3 rounded-2xl bg-white/5 border border-white/10 active:scale-[0.99]",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "min-w-0", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "font-semibold truncate", children: match.name }),
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-xs text-white/45 truncate", children: [
+                    match.brand,
+                    " ",
+                    match.speed,
+                    "/",
+                    match.glide,
+                    "/",
+                    match.turn,
+                    "/",
+                    match.fade
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-xs text-white/35 shrink-0", children: "Choose" })
+              ] })
+            ]
+          },
+          match.id
+        )) })
+      ] }),
       preview && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mt-3", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center gap-3 mb-2", children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex-1", children: [
