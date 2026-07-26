@@ -22585,8 +22585,8 @@
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "fade-up", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-center mb-5", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest mb-1", style: { color: "rgba(74,222,128,0.8)" }, children: "Welcome" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { className: "text-3xl font-bold tracking-tight mb-2", children: "Let's build your bag" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/55 text-sm", children: "Add every disc you actually throw. You can add or remove discs anytime later in Build My Bag." })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { className: "text-3xl font-bold tracking-tight mb-2", children: "Build your own bag" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/55 text-sm", children: "Add discs one at a time, or jump in with a sample/template and refine it later." })
       ] }),
       bag.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-2", children: [
@@ -22619,7 +22619,7 @@
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AddDiscForm, { bag, onAdd })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex gap-3 mt-2", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: onUseSample, className: "flex-1 py-3 rounded-2xl font-bold text-sm border border-white/15 text-white/60 active:scale-95", children: "Skip \u2014 use a sample bag" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: onUseSample, className: "flex-1 py-3 rounded-2xl font-bold text-sm border border-white/15 text-white/60 active:scale-95", children: "Restore demo bag" }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "button",
           {
@@ -22627,11 +22627,11 @@
             disabled: bag.length === 0,
             className: "flex-1 py-3 rounded-2xl font-bold text-sm active:scale-95 disabled:opacity-30",
             style: { background: "rgba(74,222,128,0.2)", color: "#4ADE80", border: "1px solid rgba(74,222,128,0.35)" },
-            children: "Start caddying \u2192"
+            children: "Continue"
           }
         )
       ] }),
-      bag.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-center text-xs text-white/30 mt-3", children: "Add at least one disc, or skip to start with a sample bag." })
+      bag.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-center text-xs text-white/30 mt-3", children: "Add at least one disc, or restore the demo bag to continue." })
     ] });
   }
   function CaddyFlow({ step, answers, results, done, pick, reset, setStep, animKey, openDetail, bag, distanceBands, armFactor }) {
@@ -23695,6 +23695,7 @@
     return { unknown: true, query: text };
   }
   var DEFAULT_BAG_TEMPLATES = [
+    { id: "demo-bag", name: "My Bag", description: "Your original demo setup. Always available.", discQueries: ["Aviar", "Pure", "Origin", "Leopard3", "Thunderbird", "Heat", "Grace", "Flick"] },
     { id: "woods", name: "Woods", description: "Tighter lines, shaping, and clean control.", discQueries: ["Pure", "Hex", "Leopard3", "Teebird", "Zone"] },
     { id: "open", name: "Open", description: "More distance and a little more headroom.", discQueries: ["Aviar", "Buzzz", "Teebird", "Thunderbird", "Grace", "Destroyer", "Firebird"] },
     { id: "windy", name: "Windy Day", description: "A bag that stands up when the air gets ugly.", discQueries: ["Zone", "Harp", "Roc3", "Thunderbird", "Firebird", "Felon", "Force"] },
@@ -23871,28 +23872,53 @@
       if (!saveTemplate(templateName)) return;
       setTemplateName("");
     };
+    const startFromScratch = () => {
+      persistBag([]);
+      setOnboarding(true);
+      setResult(null);
+      setQuery("");
+    };
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "fade-up", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { className: "text-3xl font-bold tracking-tight mb-1", children: "Build My Bag" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-4", children: "One trusted disc for every important shot. Nothing more." }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-4", children: "Start from your demo bag or a template, shape the bag, then save it when it feels right." }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-2", children: "How this works" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "grid gap-2 text-sm text-white/70", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-white/40 mr-2", children: "1." }),
+            " Start with your demo bag, one of the starter templates, or an empty bag."
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-white/40 mr-2", children: "2." }),
+            " Add discs one at a time, or tap a template to load several at once."
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-white/40 mr-2", children: "3." }),
+            " Save the current bag as a template once it feels useful."
+          ] })
+        ] })
+      ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3 mb-3", children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40", children: "Bag templates" }),
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-sm text-white/55 mt-0.5", children: "Load a preset, or save the current bag as your own template." })
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40", children: "Starting point" }),
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-sm text-white/55 mt-0.5", children: "Your demo bag is always at the top, with other templates below it." })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { value: templateName, onChange: (e) => setTemplateName(e.target.value), placeholder: "Template name", className: "w-36 sm:w-44 px-3 py-2 rounded-2xl bg-white/5 border border-white/15 text-white text-sm placeholder-white/30 outline-none" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex gap-2 mb-3", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: saveCurrentTemplate, disabled: !templateName.trim(), className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 text-white/75 active:scale-95 disabled:opacity-35", children: "Save current" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: () => { loadTemplate({ bag: materializeTemplate(DEFAULT_BAG_TEMPLATES[0]) }); }, className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 active:scale-95", children: "Load sample" })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: () => { loadTemplate({ bag: materializeTemplate(DEFAULT_BAG_TEMPLATES[0]) }); }, className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 active:scale-95", children: "Restore demo bag" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: startFromScratch, className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 active:scale-95", children: "Start empty" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: saveCurrentTemplate, disabled: !templateName.trim() || bag.length === 0, className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 text-white/75 active:scale-95 disabled:opacity-35", children: "Save current" })
         ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-2", children: "Templates" }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "grid gap-2", children: templateLibrary.map((template) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3 px-3 py-3 rounded-2xl bg-white/4 border border-white/10", children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", { onClick: () => loadTemplate(template.discQueries ? { bag: materializeTemplate(template) } : template), className: "text-left min-w-0 flex-1 active:opacity-80", children: [
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "font-semibold truncate", children: template.name }),
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs text-white/45 truncate", children: template.description || `${(template.bag || template.discQueries || []).length} discs` })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center gap-2 shrink-0", children: [
-            template.discQueries && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-[10px] uppercase tracking-widest text-white/30", children: "Built-in" }),
+            template.discQueries && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-[10px] uppercase tracking-widest text-white/30", children: template.id === "demo-bag" ? "Your bag" : "Built-in" }),
             !template.discQueries && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
               /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-[10px] uppercase tracking-widest text-white/30", children: "Saved" }),
               /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: () => deleteTemplate(template.id), className: "w-8 h-8 rounded-full border border-white/15 text-white/45 active:scale-95", children: "\u2715" })
