@@ -22661,7 +22661,12 @@
               customTemplates,
               saveTemplate,
               deleteTemplate,
-              loadTemplate
+              loadTemplate,
+              onStartEmpty: () => {
+                persistBag([]);
+                setOnboarding(true);
+                setDetail(null);
+              }
             }
           ),
           detail && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DiscDetail, { disc: detail, onBack: () => setDetail(null), animKey })
@@ -23898,7 +23903,7 @@
     if (slower && !faster) notes.push(`It carries farther than the ${slower.name} at full power, so you don't have to overthrow.`);
     return notes.slice(0, 3);
   }
-  function BuildBagScreen({ openDetail, bag, bagSynced, onAdd, onAddMany, onRemove, customTemplates, saveTemplate, deleteTemplate, loadTemplate }) {
+  function BuildBagScreen({ openDetail, bag, bagSynced, onAdd, onAddMany, onRemove, customTemplates, saveTemplate, deleteTemplate, loadTemplate, onStartEmpty }) {
     const [query, setQuery] = (0, import_react2.useState)("");
     const [result, setResult] = (0, import_react2.useState)(null);
     const [editorOpen, setEditorOpen] = (0, import_react2.useState)(false);
@@ -24000,12 +24005,6 @@
       if (!saveTemplate(templateName)) return;
       setTemplateName("");
     };
-    const startFromScratch = () => {
-      persistBag([]);
-      setOnboarding(true);
-      setResult(null);
-      setQuery("");
-    };
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "fade-up", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { className: "text-3xl font-bold tracking-tight mb-1", children: "Build My Bag" }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-4", children: "Start from your demo bag or a template, shape the bag, then save it when it feels right." }),
@@ -24035,8 +24034,7 @@
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { value: templateName, onChange: (e) => setTemplateName(e.target.value), placeholder: "Template name", className: "w-36 sm:w-44 px-3 py-2 rounded-2xl bg-white/5 border border-white/15 text-white text-sm placeholder-white/30 outline-none" })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: () => { loadTemplate({ bag: materializeTemplate(DEFAULT_BAG_TEMPLATES[0]) }); }, className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 active:scale-95", children: "Restore demo bag" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: startFromScratch, className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 active:scale-95", children: "Start empty" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: onStartEmpty, className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 active:scale-95", children: "Start empty" }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: saveCurrentTemplate, disabled: !templateName.trim() || bag.length === 0, className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 text-white/75 active:scale-95 disabled:opacity-35", children: "Save current" })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-2", children: "Templates" }),
