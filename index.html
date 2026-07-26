@@ -22312,6 +22312,8 @@
     const [onboarding, setOnboarding] = (0, import_react2.useState)(null);
     const [armFt, setArmFt] = (0, import_react2.useState)(DEFAULT_ARM_FT);
     const [armPanelOpen, setArmPanelOpen] = (0, import_react2.useState)(false);
+    const [customTemplates, setCustomTemplates] = (0, import_react2.useState)([]);
+    const [templatesLoaded, setTemplatesLoaded] = (0, import_react2.useState)(false);
     const armFactor = armFt / DEFAULT_ARM_FT;
     const distanceBands = (0, import_react2.useMemo)(() => getDistanceBands(armFactor), [armFactor]);
     const scaledBag = (0, import_react2.useMemo)(() => bag.map((d) => scaleDiscFt(d, armFactor)), [bag, armFactor]);
@@ -22348,6 +22350,7 @@
           if (!cancelled) {
             setBag(DISCS);
             setOnboarding(false);
+            setTemplatesLoaded(true);
           }
           return;
         }
@@ -22370,6 +22373,37 @@
         cancelled = true;
       };
     }, []);
+    (0, import_react2.useEffect)(() => {
+      let cancelled = false;
+      (async () => {
+        if (typeof window === "undefined" || !window.storage) {
+          if (!cancelled) setTemplatesLoaded(true);
+          return;
+        }
+        try {
+          const res = await window.storage.get("bag-templates", false);
+          if (cancelled) return;
+          const parsed = res && res.value ? JSON.parse(res.value) : [];
+          if (Array.isArray(parsed)) setCustomTemplates(parsed);
+        } catch {
+          if (!cancelled) setCustomTemplates([]);
+        } finally {
+          if (!cancelled) setTemplatesLoaded(true);
+        }
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, []);
+    (0, import_react2.useEffect)(() => {
+      if (!templatesLoaded || typeof window === "undefined" || !window.storage) return;
+      (async () => {
+        try {
+          await window.storage.set("bag-templates", JSON.stringify(customTemplates), false);
+        } catch {
+        }
+      })();
+    }, [customTemplates, templatesLoaded]);
     const persistBag = async (next) => {
       setBag(next);
       if (typeof window === "undefined" || !window.storage) return;
@@ -22383,6 +22417,21 @@
     const addManyToBag = (discs) => persistBag([...bag, ...discs]);
     const removeDiscFromBag = (id) => {
       if (bag.length > 1) persistBag(bag.filter((d) => d.id !== id));
+    };
+    const saveTemplate = (name) => {
+      const trimmed = name.trim();
+      if (!trimmed) return false;
+      const next = [{ id: `template-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, name: trimmed, description: `${bag.length} discs saved from your current bag.`, bag: bag.map((d) => normalizeDiscForTemplate(d)), createdAt: new Date().toISOString() }, ...customTemplates];
+      setCustomTemplates(next);
+      return true;
+    };
+    const deleteTemplate = (id) => {
+      setCustomTemplates((prev) => prev.filter((t) => t.id !== id));
+    };
+    const loadTemplate = (template) => {
+      const nextBag = (template.bag || []).map((d) => normalizeDiscForTemplate(d));
+      if (nextBag.length > 0) persistBag(nextBag);
+      setOnboarding(false);
     };
     const finishOnboarding = () => setOnboarding(false);
     const useSampleBag = () => {
@@ -22498,7 +22547,11 @@
               bagSynced,
               onAdd: addDiscToBag,
               onAddMany: addManyToBag,
-              onRemove: removeDiscFromBag
+              onRemove: removeDiscFromBag,
+              customTemplates,
+              saveTemplate,
+              deleteTemplate,
+              loadTemplate
             }
           ),
           detail && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DiscDetail, { disc: detail, onBack: () => setDetail(null), animKey })
@@ -23573,30 +23626,58 @@
   function discSearchTerms(disc) {
     return [disc.name, disc.brand || "", ...(disc.aliases || [])].map(normalizeDiscText).filter(Boolean);
   }
+  function levenshtein(a, b) {
+    if (a === b) return 0;
+    if (!a) return b.length;
+    if (!b) return a.length;
+    const prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+    for (let i = 1; i <= a.length; i++) {
+      const curr = [i];
+      for (let j = 1; j <= b.length; j++) {
+        curr[j] = Math.min(
+          prev[j] + 1,
+          curr[j - 1] + 1,
+          prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+        );
+      }
+      for (let j = 0; j < prev.length; j++) prev[j] = curr[j];
+    }
+    return prev[b.length];
+  }
   function scoreDiscMatch(query, disc) {
     const q = normalizeDiscText(query);
     if (!q || q.length < 2) return 0;
+    const qCompact = q.replace(/\s+/g, "");
     let score = 0;
     for (const term of discSearchTerms(disc)) {
       const tokens = term.split(" ");
+      const compact = term.replace(/\s+/g, "");
       if (term === q) score = Math.max(score, 200);
       if (term.startsWith(q)) score = Math.max(score, 160);
       if (tokens.includes(q)) score = Math.max(score, 155);
       if (tokens.some((token) => token.startsWith(q))) score = Math.max(score, 135);
       if (q.length >= 4 && tokens.some((token) => token.includes(q))) score = Math.max(score, 95);
+      const maxLen = Math.max(qCompact.length, compact.length);
+      if (maxLen >= 4) {
+        const similarity = 1 - levenshtein(qCompact, compact) / maxLen;
+        if (similarity >= 0.55) score = Math.max(score, Math.round(70 + similarity * 55));
+      }
     }
     return score;
   }
-  function findKnownDiscMatches(query, limit = 5) {
+  function getDiscMatches(query, limit = 6) {
     const q = normalizeDiscText(query);
     if (!q) return [];
     if (q.length === 1) {
-      return KNOWN_DISCS.filter((d) => discSearchTerms(d).some((term) => term.split(" ").includes(q))).slice(0, limit).map((disc) => ({ disc, score: 200 }));
+      return KNOWN_DISCS.filter((d) => discSearchTerms(d).some((term) => term.startsWith(q))).slice(0, limit).map((disc) => ({ disc, score: 200 }));
     }
     return KNOWN_DISCS.map((disc) => ({ disc, score: scoreDiscMatch(q, disc) }))
       .filter((item) => item.score > 0)
       .sort((a, b) => b.score - a.score || a.disc.name.localeCompare(b.disc.name))
       .slice(0, limit);
+  }
+  function findKnownDiscMatches(query, limit = 5) {
+    return getDiscMatches(query, limit);
   }
   function parseCandidateInput(raw) {
     const text = raw.trim();
@@ -23607,10 +23688,28 @@
       const [speed, glide, turn, fade] = nums.slice(0, 4).map(Number);
       if (speed >= 1 && speed <= 15) return { name: `Custom ${speed}/${glide}/${turn}/${fade}`, brand: "", speed, glide, turn, fade };
     }
-    const matches = findKnownDiscMatches(text);
-    if (matches.length === 1 && matches[0].score >= 135) return { ...matches[0].disc };
+    const matches = getDiscMatches(text);
+    if (matches.length === 0) return { unknown: true, query: text };
+    if (matches[0].score >= 180 && (!matches[1] || matches[0].score - matches[1].score >= 20)) return { ...matches[0].disc };
     if (matches.length > 1) return { ambiguous: true, query: text, matches: matches.map((m) => m.disc) };
     return { unknown: true, query: text };
+  }
+  var DEFAULT_BAG_TEMPLATES = [
+    { id: "woods", name: "Woods", description: "Tighter lines, shaping, and clean control.", discQueries: ["Pure", "Hex", "Leopard3", "Teebird", "Zone"] },
+    { id: "open", name: "Open", description: "More distance and a little more headroom.", discQueries: ["Aviar", "Buzzz", "Teebird", "Thunderbird", "Grace", "Destroyer", "Firebird"] },
+    { id: "windy", name: "Windy Day", description: "A bag that stands up when the air gets ugly.", discQueries: ["Zone", "Harp", "Roc3", "Thunderbird", "Firebird", "Felon", "Force"] },
+    { id: "beginner", name: "Beginner", description: "Simple shapes and easy-to-manage speed.", discQueries: ["Aviar", "Pure", "Hex", "Leopard3", "Escape"] }
+  ];
+  function resolveDiscQuery(query) {
+    const cand = parseCandidateInput(query);
+    if (!cand || cand.unknown || cand.ambiguous) return null;
+    return synthesizeDisc(cand);
+  }
+  function materializeTemplate(template) {
+    return (template.discQueries || []).map((query) => resolveDiscQuery(query)).filter(Boolean);
+  }
+  function normalizeDiscForTemplate(disc) {
+    return JSON.parse(JSON.stringify(disc));
   }
   var RING_FOR_STAB = { understable: "#22A85A", neutral: "#3E76AB", stable: "#D0721E", overstable: "#C23B3B" };
   var BAND_RANGE = {
@@ -23670,12 +23769,82 @@
     if (slower && !faster) notes.push(`It carries farther than the ${slower.name} at full power, so you don't have to overthrow.`);
     return notes.slice(0, 3);
   }
-  function BuildBagScreen({ openDetail, bag, bagSynced, onAdd, onAddMany, onRemove }) {
+  function BuildBagScreen({ openDetail, bag, bagSynced, onAdd, onAddMany, onRemove, customTemplates, saveTemplate, deleteTemplate, loadTemplate }) {
     const [query, setQuery] = (0, import_react2.useState)("");
     const [result, setResult] = (0, import_react2.useState)(null);
     const [editorOpen, setEditorOpen] = (0, import_react2.useState)(false);
     const [pendingRemove, setPendingRemove] = (0, import_react2.useState)(null);
+    const fileInputRef = (0, import_react2.useRef)(null);
+    const [dataNote, setDataNote] = (0, import_react2.useState)("");
+    const [templateName, setTemplateName] = (0, import_react2.useState)("");
     const gapReport = (0, import_react2.useMemo)(() => analyzeBag(bag), [bag]);
+    const queryMatches = query.trim().length >= 1 ? getDiscMatches(query, 5) : [];
+    const templateLibrary = [...DEFAULT_BAG_TEMPLATES, ...(customTemplates || [])];
+    const downloadData = async () => {
+      if (typeof window === "undefined" || !window.storage) return;
+      try {
+        const listing = await window.storage.list("");
+        const entries = await Promise.all((listing.keys || []).map(async (key) => {
+          try {
+            const res = await window.storage.get(key, false);
+            return [key, res.value];
+          } catch {
+            return [key, null];
+          }
+        }));
+        const payload = {
+          version: 1,
+          exportedAt: new Date().toISOString(),
+          app: "DiscCaddy",
+          data: Object.fromEntries(entries.filter(([, value]) => value !== null))
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `disccaddy-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        setDataNote("Backup exported.");
+      } catch {
+        setDataNote("Could not export data right now.");
+      }
+    };
+    const startImport = () => {
+      setDataNote("");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      fileInputRef.current && fileInputRef.current.click();
+    };
+    const importDataFile = async (file) => {
+      if (!file || typeof window === "undefined" || !window.storage) return;
+      try {
+        const raw = await file.text();
+        const parsed = JSON.parse(raw);
+        const source = parsed && typeof parsed === "object" && parsed.data && typeof parsed.data === "object" ? parsed.data : parsed;
+        const entries = Object.entries(source || {}).filter(([key]) => typeof key === "string");
+        for (const [key, value] of entries) {
+          if (key === "version" || key === "exportedAt" || key === "app") continue;
+          if (value === null || value === undefined) continue;
+          await window.storage.set(key, typeof value === "string" ? value : JSON.stringify(value), false);
+        }
+        setDataNote("Backup imported. Reloading...");
+        setTimeout(() => window.location.reload(), 500);
+      } catch {
+        setDataNote("That file does not look like a DiscCaddy backup.");
+      }
+    };
+    const resetData = async () => {
+      if (typeof window === "undefined" || !window.storage) return;
+      if (!window.confirm("Clear all DiscCaddy saved data on this device?")) return;
+      try {
+        const listing = await window.storage.list("");
+        for (const key of listing.keys || []) await window.storage.delete(key, false);
+        setDataNote("Saved data cleared. Reloading...");
+        setTimeout(() => window.location.reload(), 300);
+      } catch {
+        setDataNote("Could not clear saved data right now.");
+      }
+    };
     const analyze = () => {
       const cand = parseCandidateInput(query);
       if (!cand) return;
@@ -23698,9 +23867,57 @@
       onRemove(id);
       setPendingRemove(null);
     };
+    const saveCurrentTemplate = () => {
+      if (!saveTemplate(templateName)) return;
+      setTemplateName("");
+    };
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "fade-up", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { className: "text-3xl font-bold tracking-tight mb-1", children: "Build My Bag" }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-4", children: "One trusted disc for every important shot. Nothing more." }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3 mb-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40", children: "Bag templates" }),
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-sm text-white/55 mt-0.5", children: "Load a preset, or save the current bag as your own template." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { value: templateName, onChange: (e) => setTemplateName(e.target.value), placeholder: "Template name", className: "w-36 sm:w-44 px-3 py-2 rounded-2xl bg-white/5 border border-white/15 text-white text-sm placeholder-white/30 outline-none" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex gap-2 mb-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: saveCurrentTemplate, disabled: !templateName.trim(), className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 text-white/75 active:scale-95 disabled:opacity-35", children: "Save current" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: () => { loadTemplate({ bag: materializeTemplate(DEFAULT_BAG_TEMPLATES[0]) }); }, className: "px-4 py-2 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 active:scale-95", children: "Load sample" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "grid gap-2", children: templateLibrary.map((template) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3 px-3 py-3 rounded-2xl bg-white/4 border border-white/10", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", { onClick: () => loadTemplate(template.discQueries ? { bag: materializeTemplate(template) } : template), className: "text-left min-w-0 flex-1 active:opacity-80", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "font-semibold truncate", children: template.name }),
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs text-white/45 truncate", children: template.description || `${(template.bag || template.discQueries || []).length} discs` })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center gap-2 shrink-0", children: [
+            template.discQueries && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-[10px] uppercase tracking-widest text-white/30", children: "Built-in" }),
+            !template.discQueries && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-[10px] uppercase tracking-widest text-white/30", children: "Saved" }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: () => deleteTemplate(template.id), className: "w-8 h-8 rounded-full border border-white/15 text-white/45 active:scale-95", children: "\u2715" })
+            ] })
+          ] })
+        ] }, template.id)) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3 mb-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40", children: "Saved data" }),
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-sm text-white/55 mt-0.5", children: "Bag, arm profile, and score history stay in this browser unless you export them." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { ref: fileInputRef, type: "file", accept: "application/json,.json", className: "hidden", onChange: (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (file) importDataFile(file);
+          } })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "grid grid-cols-3 gap-2", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: downloadData, className: "py-2.5 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 active:scale-95", children: "\u21E9 Export" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: startImport, className: "py-2.5 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 active:scale-95", children: "\u21E7 Import" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: resetData, className: "py-2.5 rounded-2xl text-sm font-semibold border border-white/15 bg-white/5 text-white/75 active:scale-95", children: "\u21BA Reset" })
+        ] }),
+        dataNote && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs text-white/45 mt-2", children: dataNote })
+      ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between", children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
@@ -23830,6 +24047,36 @@
             }
           )
         ] }),
+        queryMatches.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "mt-3 grid gap-2", children: queryMatches.map((match) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+          "button",
+          {
+            onClick: () => {
+              setQuery(match.disc.name);
+              setResult({ cand: match.disc, evalr: evaluateCandidate(match.disc, bag) });
+            },
+            className: "w-full text-left px-4 py-3 rounded-2xl bg-white/5 border border-white/10 active:scale-[0.99]",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "min-w-0", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "font-semibold truncate", children: match.disc.name }),
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-xs text-white/45 truncate", children: [
+                    match.disc.brand,
+                    " ",
+                    match.disc.speed,
+                    "/",
+                    match.disc.glide,
+                    "/",
+                    match.disc.turn,
+                    "/",
+                    match.disc.fade
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-xs text-white/35 shrink-0", children: "Use" })
+              ] })
+            ]
+          },
+          match.disc.id
+        )) }),
         result && result.unknown && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { className: "text-sm text-white/60 mt-3", children: [
           `I don't know "`,
           result.query,
@@ -23893,6 +24140,7 @@
     const [query, setQuery] = (0, import_react2.useState)("");
     const [preview, setPreview] = (0, import_react2.useState)(null);
     const [notFound, setNotFound] = (0, import_react2.useState)(false);
+    const matches = query.trim().length >= 1 ? getDiscMatches(query, 5) : [];
     const lookup = () => {
       setNotFound(false);
       setPreview(null);
@@ -23923,6 +24171,36 @@
         ),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: lookup, className: "px-5 py-3 rounded-2xl font-bold text-sm active:scale-95 border border-white/15 text-white/70 active:scale-95", children: "Find" })
       ] }),
+      matches.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "mt-3 grid gap-2", children: matches.map((match) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+        "button",
+        {
+          onClick: () => {
+            setQuery(match.disc.name);
+            setPreview({ cand: match.disc, evalr: evaluateCandidate(match.disc, bag) });
+          },
+          className: "w-full text-left px-4 py-3 rounded-2xl bg-white/5 border border-white/10 active:scale-[0.99]",
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "min-w-0", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "font-semibold truncate", children: match.disc.name }),
+                /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-xs text-white/45 truncate", children: [
+                  match.disc.brand,
+                  " ",
+                  match.disc.speed,
+                  "/",
+                  match.disc.glide,
+                  "/",
+                  match.disc.turn,
+                  "/",
+                  match.disc.fade
+                ] })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-xs text-white/35 shrink-0", children: "Use" })
+            ] })
+          ]
+        },
+        match.disc.id
+      )) }),
       notFound && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-sm text-white/60 mt-3", children: `Don't recognize that name \u2014 try its flight numbers instead, like "9 5 -1 2".` }),
       preview && preview.ambiguous && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "mt-3", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { className: "text-sm text-white/60 mb-2", children: [
