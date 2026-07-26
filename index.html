@@ -15,6 +15,46 @@
 <style>
   html, body { margin: 0; padding: 0; background: #070A08; }
   #root { min-height: 100vh; min-height: 100dvh; }
+  .theme-light {
+    --dc-text: #14211a;
+    --dc-text-strong: #0b120d;
+    --dc-muted: rgba(20, 33, 26, 0.66);
+    --dc-subtle: rgba(20, 33, 26, 0.44);
+    --dc-surface: rgba(255, 255, 255, 0.82);
+    --dc-surface-strong: rgba(255, 255, 255, 0.92);
+    --dc-border: rgba(20, 33, 26, 0.12);
+    --dc-border-strong: rgba(20, 33, 26, 0.18);
+    --dc-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+    --dc-star-filled: #ca8a04;
+    --dc-star-empty: rgba(20, 33, 26, 0.18);
+    --dc-svg-main: rgba(20, 33, 26, 0.58);
+    --dc-svg-soft: rgba(20, 33, 26, 0.16);
+    --dc-svg-faint: rgba(20, 33, 26, 0.11);
+  }
+  .theme-light [class*="text-white"] { color: var(--dc-text) !important; }
+  .theme-light [class*="bg-white/"] { background-color: var(--dc-surface) !important; }
+  .theme-light [class*="border-white/"] { border-color: var(--dc-border) !important; }
+  .theme-light .text-white\/30,
+  .theme-light .text-white\/35,
+  .theme-light .text-white\/40,
+  .theme-light .text-white\/45,
+  .theme-light .text-white\/50,
+  .theme-light .text-white\/55,
+  .theme-light .text-white\/60,
+  .theme-light .text-white\/65,
+  .theme-light .text-white\/70,
+  .theme-light .text-white\/75,
+  .theme-light .text-white\/80,
+  .theme-light .text-white\/90 {
+    color: var(--dc-muted) !important;
+  }
+  .theme-light .bg-white\/4,
+  .theme-light .bg-white\/5,
+  .theme-light .bg-white\/10,
+  .theme-light .bg-white\/15,
+  .theme-light .bg-white\/20 {
+    background-color: var(--dc-surface) !important;
+  }
 </style>
 </head>
 <body>
@@ -22202,14 +22242,14 @@
       "div",
       {
         onClick,
-        style,
+        style: { backgroundColor: "var(--dc-surface)", borderColor: "var(--dc-border)", boxShadow: "var(--dc-shadow)", ...style },
         className: `rounded-3xl border border-white/10 bg-white/5 shadow-lg ${onClick ? "cursor-pointer active:scale-95 transition-transform" : ""} ${className}`,
         children
       }
     );
   }
   function Stars({ n }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex gap-1 text-xl", "aria-label": `${n} of 5 stars`, children: [1, 2, 3, 4, 5].map((i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { color: i <= n ? "#FBBF24" : "rgba(255,255,255,0.15)" }, children: "\u2605" }, i)) });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex gap-1 text-xl", "aria-label": `${n} of 5 stars`, children: [1, 2, 3, 4, 5].map((i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { color: i <= n ? "var(--dc-star-filled)" : "var(--dc-star-empty)" }, children: "\u2605" }, i)) });
   }
   function DiscImage({ disc, size = 96 }) {
     const r = size / 2;
@@ -22251,11 +22291,11 @@
     const d = topDownPath(disc, throwType);
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { viewBox: "0 0 220 300", className: "w-full", style: { maxHeight: 260 }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: "30", y: "0", width: "160", height: "300", rx: "18", fill: "rgba(74,222,128,0.05)" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: "110", y1: "10", x2: "110", y2: "290", stroke: "rgba(255,255,255,0.08)", strokeDasharray: "3 7" }),
-      [75, 150, 225].map((y) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: "40", y1: 300 - y, x2: "180", y2: 300 - y, stroke: "rgba(255,255,255,0.06)" }, y)),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: "110", cy: "20", r: "7", fill: "none", stroke: "rgba(255,255,255,0.5)", strokeWidth: "2" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: "110", y1: "13", x2: "110", y2: "27", stroke: "rgba(255,255,255,0.5)", strokeWidth: "2" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: "98", y: "280", width: "24", height: "8", rx: "2", fill: "rgba(255,255,255,0.25)" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: "110", y1: "10", x2: "110", y2: "290", stroke: "var(--dc-svg-faint)", strokeDasharray: "3 7" }),
+      [75, 150, 225].map((y) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: "40", y1: 300 - y, x2: "180", y2: 300 - y, stroke: "var(--dc-svg-faint)" }, y)),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: "110", cy: "20", r: "7", fill: "none", stroke: "var(--dc-svg-main)", strokeWidth: "2" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: "110", y1: "13", x2: "110", y2: "27", stroke: "var(--dc-svg-main)", strokeWidth: "2" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: "98", y: "280", width: "24", height: "8", rx: "2", fill: "var(--dc-svg-soft)" }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "path",
         {
@@ -22268,19 +22308,19 @@
         },
         animKey
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: "14", y: "292", fontSize: "10", fill: "rgba(255,255,255,0.35)", children: "TEE" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: "14", y: "24", fontSize: "10", fill: "rgba(255,255,255,0.35)", children: "PIN" })
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: "14", y: "292", fontSize: "10", fill: "var(--dc-subtle)", children: "TEE" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: "14", y: "24", fontSize: "10", fill: "var(--dc-subtle)", children: "PIN" })
     ] });
   }
   function Glidepath({ disc, animKey }) {
     const W = 320, H = 130;
     const g = glidePath(disc, W, H);
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { viewBox: `0 0 ${W} ${H}`, className: "w-full", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: "0", y: "0", width: W, height: g.ground, fill: "rgba(255,255,255,0.02)" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: "0", y: "0", width: W, height: g.ground, fill: "rgba(74,222,128,0.03)" }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: "8", y1: g.ground, x2: W - 8, y2: g.ground, stroke: "rgba(74,222,128,0.4)", strokeWidth: "2" }),
-      [0.25, 0.5, 0.75].map((f) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: g.startX + (g.land - g.startX) * f, y1: g.ground - 3, x2: g.startX + (g.land - g.startX) * f, y2: g.ground + 3, stroke: "rgba(255,255,255,0.25)" }, f)),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: g.startX, cy: g.ground - 26, r: "4", fill: "rgba(255,255,255,0.5)" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: g.startX, y1: g.ground - 22, x2: g.startX, y2: g.ground - 6, stroke: "rgba(255,255,255,0.5)", strokeWidth: "2" }),
+      [0.25, 0.5, 0.75].map((f) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: g.startX + (g.land - g.startX) * f, y1: g.ground - 3, x2: g.startX + (g.land - g.startX) * f, y2: g.ground + 3, stroke: "var(--dc-svg-main)" }, f)),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: g.startX, cy: g.ground - 26, r: "4", fill: "var(--dc-svg-main)" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("line", { x1: g.startX, y1: g.ground - 22, x2: g.startX, y2: g.ground - 6, stroke: "var(--dc-svg-main)", strokeWidth: "2" }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "path",
         {
@@ -22294,14 +22334,15 @@
         animKey
       ),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: g.land, cy: g.ground, r: "4", fill: disc.color }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: g.startX - 2, y: H - 4, fontSize: "9", fill: "rgba(255,255,255,0.35)", children: "RELEASE" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: g.land - 30, y: H - 4, fontSize: "9", fill: "rgba(255,255,255,0.35)", children: "LANDING" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: W / 2 - 26, y: "14", fontSize: "9", fill: "rgba(255,255,255,0.3)", style: { letterSpacing: "0.15em" }, children: "SIDE VIEW" })
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: g.startX - 2, y: H - 4, fontSize: "9", fill: "var(--dc-subtle)", children: "RELEASE" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: g.land - 30, y: H - 4, fontSize: "9", fill: "var(--dc-subtle)", children: "LANDING" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: W / 2 - 26, y: "14", fontSize: "9", fill: "var(--dc-muted)", style: { letterSpacing: "0.15em" }, children: "SIDE VIEW" })
     ] });
   }
   var QUESTIONS = ["distance", "shape", "throwType", "risk"];
   function App() {
     const [tab, setTab] = (0, import_react2.useState)("caddy");
+    const [theme, setTheme] = (0, import_react2.useState)("dark");
     const [step, setStep] = (0, import_react2.useState)(0);
     const [answers, setAnswers] = (0, import_react2.useState)({});
     const [detail, setDetail] = (0, import_react2.useState)(null);
@@ -22314,6 +22355,8 @@
     const [armPanelOpen, setArmPanelOpen] = (0, import_react2.useState)(false);
     const [customTemplates, setCustomTemplates] = (0, import_react2.useState)([]);
     const [templatesLoaded, setTemplatesLoaded] = (0, import_react2.useState)(false);
+    const [themeLoaded, setThemeLoaded] = (0, import_react2.useState)(false);
+    const isLight = theme === "light";
     const armFactor = armFt / DEFAULT_ARM_FT;
     const distanceBands = (0, import_react2.useMemo)(() => getDistanceBands(armFactor), [armFactor]);
     const scaledBag = (0, import_react2.useMemo)(() => bag.map((d) => scaleDiscFt(d, armFactor)), [bag, armFactor]);
@@ -22377,6 +22420,25 @@
       let cancelled = false;
       (async () => {
         if (typeof window === "undefined" || !window.storage) {
+          if (!cancelled) setThemeLoaded(true);
+          return;
+        }
+        try {
+          const res = await window.storage.get("ui-theme", false);
+          if (!cancelled && res && res.value === "light") setTheme("light");
+        } catch {
+        } finally {
+          if (!cancelled) setThemeLoaded(true);
+        }
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, []);
+    (0, import_react2.useEffect)(() => {
+      let cancelled = false;
+      (async () => {
+        if (typeof window === "undefined" || !window.storage) {
           if (!cancelled) setTemplatesLoaded(true);
           return;
         }
@@ -22404,6 +22466,17 @@
         }
       })();
     }, [customTemplates, templatesLoaded]);
+    (0, import_react2.useEffect)(() => {
+      if (!themeLoaded) return;
+      if (typeof document !== "undefined") {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", isLight ? "#EEF3EC" : "#070A08");
+      }
+      if (typeof window !== "undefined" && window.storage) {
+        window.storage.set("ui-theme", theme, false).catch(() => {
+        });
+      }
+    }, [theme, isLight, themeLoaded]);
     const persistBag = async (next) => {
       setBag(next);
       if (typeof window === "undefined" || !window.storage) return;
@@ -22438,6 +22511,38 @@
       persistBag(DISCS);
       setOnboarding(false);
     };
+    const themeVars = isLight ? {
+      "--dc-text": "#14211a",
+      "--dc-text-strong": "#0b120d",
+      "--dc-muted": "rgba(20, 33, 26, 0.66)",
+      "--dc-subtle": "rgba(20, 33, 26, 0.44)",
+      "--dc-surface": "rgba(255, 255, 255, 0.82)",
+      "--dc-surface-strong": "rgba(255, 255, 255, 0.92)",
+      "--dc-border": "rgba(20, 33, 26, 0.12)",
+      "--dc-border-strong": "rgba(20, 33, 26, 0.18)",
+      "--dc-shadow": "0 16px 40px rgba(15, 23, 42, 0.08)",
+      "--dc-star-filled": "#ca8a04",
+      "--dc-star-empty": "rgba(20, 33, 26, 0.18)",
+      "--dc-svg-main": "rgba(20, 33, 26, 0.58)",
+      "--dc-svg-soft": "rgba(20, 33, 26, 0.16)",
+      "--dc-svg-faint": "rgba(20, 33, 26, 0.11)"
+    } : {
+      "--dc-text": "#FFFFFF",
+      "--dc-text-strong": "#F8FAFC",
+      "--dc-muted": "rgba(255, 255, 255, 0.66)",
+      "--dc-subtle": "rgba(255, 255, 255, 0.44)",
+      "--dc-surface": "rgba(255, 255, 255, 0.05)",
+      "--dc-surface-strong": "rgba(255, 255, 255, 0.08)",
+      "--dc-border": "rgba(255, 255, 255, 0.10)",
+      "--dc-border-strong": "rgba(255, 255, 255, 0.15)",
+      "--dc-shadow": "0 18px 50px rgba(0, 0, 0, 0.25)",
+      "--dc-star-filled": "#FBBF24",
+      "--dc-star-empty": "rgba(255, 255, 255, 0.15)",
+      "--dc-svg-main": "rgba(255, 255, 255, 0.50)",
+      "--dc-svg-soft": "rgba(255, 255, 255, 0.25)",
+      "--dc-svg-faint": "rgba(255, 255, 255, 0.08)"
+    };
+    const pageStyle = isLight ? { background: "radial-gradient(1200px 800px at 50% -10%, #F3F8F1 0%, #EEF4EB 55%, #E7ECE4 100%)" } : { background: "radial-gradient(1200px 800px at 50% -10%, #12241A 0%, #0B0F0D 55%, #070A08 100%)" };
     const done = QUESTIONS.every((q) => answers[q]);
     const results = (0, import_react2.useMemo)(() => {
       if (!done) return null;
@@ -22464,7 +22569,7 @@
       setAnswers({});
       setStep(0);
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "min-h-screen text-white", style: { background: "radial-gradient(1200px 800px at 50% -10%, #12241A 0%, #0B0F0D 55%, #070A08 100%)", fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif" }, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `${isLight ? "theme-light" : "theme-dark"} min-h-screen text-white`, style: { ...themeVars, ...pageStyle, fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif" }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("style", { children: `
         @keyframes drawLine { to { stroke-dashoffset: 0; } }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
@@ -22477,22 +22582,27 @@
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest", style: { color: "rgba(74,222,128,0.8)" }, children: "Disc Golf" }),
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { className: "text-2xl font-bold tracking-tight", children: "DiscCaddy" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-            "button",
-            {
-              onClick: () => setArmPanelOpen((o) => !o),
-              className: "text-right text-xs leading-tight active:opacity-70",
-              style: { color: armPanelOpen ? "#4ADE80" : "rgba(255,255,255,0.4)" },
-              children: [
-                (ARM_PRESETS.find((p) => p.ft === armFt) || {}).label || "Custom",
-                " \xB7 ",
-                armFt,
-                " ft arm",
-                /* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
-                /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "underline underline-offset-2", children: "Adjust" })
-              ]
-            }
-          )
+          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", { onClick: () => setTheme((t) => t === "light" ? "dark" : "light"), className: "w-10 h-10 rounded-full border border-white/15 bg-white/5 flex items-center justify-center active:scale-95", title: "Toggle light mode", "aria-label": "Toggle light mode", children: [
+              isLight ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-lg", children: "\u263E" }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-lg", children: "\u2600" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+              "button",
+              {
+                onClick: () => setArmPanelOpen((o) => !o),
+                className: "text-right text-xs leading-tight active:opacity-70",
+                style: { color: armPanelOpen ? "#4ADE80" : "var(--dc-muted)" },
+                children: [
+                  (ARM_PRESETS.find((p) => p.ft === armFt) || {}).label || "Custom",
+                  " \xB7 ",
+                  armFt,
+                  " ft arm",
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "underline underline-offset-2", children: "Adjust" })
+                ]
+              }
+            )
+          ] })
         ] }),
         armPanelOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-4 py-3 mb-4", children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-xs text-white/50 mb-2.5", children: "What's your realistic max drive distance? Every recommendation and distance band scales to this." }),
@@ -22557,7 +22667,7 @@
           detail && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DiscDetail, { disc: detail, onBack: () => setDetail(null), animKey })
         ] })
       ] }),
-      onboarding === false && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "fixed bottom-0 left-0 right-0", style: { background: "rgba(10,14,11,0.8)", backdropFilter: "blur(16px)", borderTop: "1px solid rgba(255,255,255,0.08)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "max-w-md mx-auto flex", children: [
+      onboarding === false && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "fixed bottom-0 left-0 right-0", style: { background: "var(--dc-surface-strong)", backdropFilter: "blur(16px)", borderTop: "1px solid var(--dc-border)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "max-w-md mx-auto flex", children: [
         { id: "caddy", label: "Caddy", icon: "\u{1F94F}" },
         { id: "score", label: "Score", icon: "\u26F3" },
         { id: "bag", label: "My Bag", icon: "\u{1F392}" },
