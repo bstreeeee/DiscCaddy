@@ -23058,17 +23058,18 @@
     ] });
   }
   function CaddyFlow({ step, answers, results, done, pick, reset, setStep, setThrowType, animKey, openDetail, bag, distanceBands, armFactor }) {
+    const safeStep = Math.max(0, Math.min(step, QUESTIONS.length));
     if (done && results) {
       return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Recommendation, { results, answers, reset, setThrowType, animKey, openDetail, bag, distanceBands, armFactor });
     }
-    const q = QUESTIONS[step];
+    const q = safeStep < QUESTIONS.length ? QUESTIONS[safeStep] : null;
     const chip = (label, onBack) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", { onClick: onBack, className: "px-3 py-1.5 rounded-full text-xs font-semibold border border-white/15 bg-white/5 text-white/70 active:scale-95", children: [
       label,
       " \u2715"
     ] });
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "fade-up", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex gap-1.5 mb-4", children: QUESTIONS.map((_, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-1.5 flex-1 rounded-full", style: { background: i < step ? "#4ADE80" : i === step ? "rgba(74,222,128,0.45)" : "rgba(255,255,255,0.1)" } }, i)) }),
-      step > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex flex-wrap gap-2 mb-4", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex gap-1.5 mb-4", children: QUESTIONS.map((_, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-1.5 flex-1 rounded-full", style: { background: i < safeStep ? "#4ADE80" : i === safeStep ? "rgba(74,222,128,0.45)" : "rgba(255,255,255,0.1)" } }, i)) }),
+      safeStep > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex flex-wrap gap-2 mb-4", children: [
         answers.distance && chip((distanceBands.find((d) => d.id === answers.distance) || { label: "Distance" }).label, () => {
           setStep(0);
         }),
@@ -23111,8 +23112,13 @@
         }) }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex gap-3", children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: () => setStep(QUESTIONS.length), className: "flex-1 py-3 rounded-2xl font-bold text-sm active:scale-95 disabled:opacity-30", style: { background: "rgba(74,222,128,0.2)", color: "#4ADE80", border: "1px solid rgba(74,222,128,0.35)" }, children: "See recommendation" }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: reset, className: "px-4 py-3 rounded-2xl font-bold text-sm border border-white/15 bg-white/5 active:scale-95", children: "Reset" })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: reset, className: "px-4 py-3 rounded-2xl font-bold text-sm border border-white/15 bg-white/5 active:scale-95", children: "Reset" })
         ] })
+      ] }),
+      !q && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-5", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-2", children: "Caddy" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/75 mb-4", children: "Pick a distance, shot shape, and conditions to get a recommendation." }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: () => setStep(0), className: "px-4 py-2 rounded-2xl border border-white/15 bg-white/5 text-sm font-semibold active:scale-95", children: "Start over" })
       ] })
     ] });
   }
