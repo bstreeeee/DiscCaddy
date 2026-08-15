@@ -22361,14 +22361,77 @@
         return disc.notes;
     }
   }
-  function releaseCue(shape, throwType, disc) {
-    if (disc.id === "flick" || disc.id === "a2") return "Aim at the opening and let it finish hard left.";
-    if (shape === "right") return "Start it on the line and let it drift right.";
-    if (shape === "slightLeft") return "Release flat and trust a small left finish.";
-    if (shape === "strongLeft") return "Aim at the middle of the gap and let it finish left.";
-    if (shape === "extremeLeft") return "Give it room early and let it dump left.";
-    if (throwType === "forehand") return "Keep it smooth and on the line.";
-    return "Release it flat on the center line.";
+  function shapeCue(shape) {
+    switch (shape) {
+      case "right":
+        return "Let it drift right.";
+      case "slightLeft":
+        return "Keep it mostly flat and expect a small left finish.";
+      case "strongLeft":
+        return "Commit to the left finish.";
+      case "extremeLeft":
+        return "Give it room early and let it dump left.";
+      default:
+        return "Keep it flat and smooth.";
+    }
+  }
+  function distanceCue(distance) {
+    switch (distance) {
+      case "short":
+        return "This is a touch shot, so stay compact.";
+      case "medium":
+        return "This is a control shot, so use a clean full pull.";
+      case "long":
+        return "This is a full shot, so stay smooth and give it room.";
+      default:
+        return "Stay smooth and on line.";
+    }
+  }
+  function discCue(disc, throwType) {
+    const forehand = throwType === "forehand";
+    switch (disc.id) {
+      case "pure":
+        return forehand ? "Forehand: keep the Pure smooth and let it hold straight." : "Throw the Pure flat and let it hold the line.";
+      case "pa5":
+        return forehand ? "Forehand: keep the PA-5 smooth and give it room to move right." : "The PA-5 wants to drift right, so do not fight it.";
+      case "a5":
+        return forehand ? "Forehand: throw the A5 clean and let it finish back." : "The A5 is the in-between choice - mostly straight with a small left finish.";
+      case "a3":
+        return forehand ? "Forehand: use a firm A3 and trust the left finish." : "The A3 wants a firm line and a clear left finish.";
+      case "a2":
+        return forehand ? "Forehand: keep the A2 short and committed." : "The A2 is for hard left finishes and tricky exits.";
+      case "origin":
+        return forehand ? "Forehand: keep the Origin smooth and low." : "The Origin is your straight control mid, so keep the nose down.";
+      case "leopard3":
+        return forehand ? "Forehand: let the Leopard3 carry and move a little right." : "The Leopard3 should drift right a little, then settle.";
+      case "heat":
+        return forehand ? "Forehand: let the Heat glide and turn." : "The Heat wants more turn and glide, so give it room.";
+      case "thunderbird":
+        return forehand ? "Forehand: throw the Thunderbird flat and firm." : "The Thunderbird is your trustworthy straight-to-left driver.";
+      case "grace":
+        return forehand ? "Forehand: use the Grace smoothly and do not force it." : "The Grace is your default long drive, so throw it smooth and flat.";
+      case "d3":
+        return forehand ? "Forehand: use the D3 when you want more finish." : "The D3 is the long option when you want more left finish than the Grace.";
+      case "flick":
+        return forehand ? "Forehand: make it short, firm, and committed." : "The Flick is a utility disc - short, committed, and hard left.";
+      default:
+        return forehand ? "Keep the forehand smooth and on line." : "Keep it smooth and on line.";
+    }
+  }
+  function conditionCue(conditions) {
+    const conds = normalizeConditions(conditions);
+    if (conds.includes("recovery")) return "For recovery, pick the safest gap over distance.";
+    if (conds.includes("headwind")) return "In headwind, throw it a touch flatter and firmer.";
+    if (conds.includes("woods")) return "In woods, keep it low and simple.";
+    if (conds.includes("lowCeiling")) return "Keep the flight low.";
+    if (conds.includes("tailwind")) return "In tailwind, stay smooth and let it carry.";
+    if (conds.includes("avoidRight")) return "Bias a little left of the line so it finishes back.";
+    if (conds.includes("avoidLeft")) return "Bias a little right of the line so it works back.";
+    if (conds.includes("open")) return "You have room, so trust the disc's natural finish.";
+    return "";
+  }
+  function throwCueForShot({ disc, distance, shape, conditions, throwType }) {
+    return [distanceCue(distance), discCue(disc, throwType), shapeCue(shape), conditionCue(conditions)].filter(Boolean).join(" ");
   }
   function confidenceLevel(disc, score, topScore) {
     if (disc.id === "a5") return { label: "Low", value: 42 };
@@ -22497,7 +22560,7 @@
       if (disc.id === "a5") score -= 2;
       const confidence = confidenceLevel(disc, score, 100);
       const summary = disc.id === "a5" ? "Tentative match. This looks like the A5, but the identification is not fully confirmed." : preferredRank === 0 ? `Use the ${disc.name}.` : `The ${disc.name} is the backup if you want a different finish.`;
-      const release = releaseCue(shape, isFH ? "forehand" : "backhand", disc);
+      const cue = throwCueForShot({ disc, distance, shape, conditions: conds, throwType: isFH ? "forehand" : "backhand" });
       return {
         disc,
         score: Math.round(score),
@@ -22505,7 +22568,7 @@
         whyNot,
         summary,
         flight: expectedFlightText(disc),
-        release,
+        cue,
         confidence: confidence.value,
         confidenceLabel: confidence.label,
         stars: confidence.value >= 80 ? 5 : confidence.value >= 70 ? 4 : confidence.value >= 55 ? 3 : 2
@@ -23184,6 +23247,10 @@
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-2", children: "Why" }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/85 leading-relaxed", children: top.summary || (top.why.length ? top.why.join(" ") : `Best fit in the bag for this line and distance.`) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-2", children: "Throw cue" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/80 leading-relaxed", children: top.cue || throwCueForShot({ disc, distance: answers.distance, shape: answers.shape, conditions: answers.conditions, throwType: answers.throwType }) })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", style: { borderColor: "rgba(125,211,252,0.2)" }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest mb-2", style: { color: "rgba(125,211,252,0.7)" }, children: "Learn \xB7 why this disc over the others" }),
