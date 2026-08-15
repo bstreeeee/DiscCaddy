@@ -22143,6 +22143,10 @@
     { id: "strongLeft", label: "Strong Finish Left", glyph: "hook-left" },
     { id: "extremeLeft", label: "Extreme Left", glyph: "hook-left" }
   ];
+  function shapeLabel(id) {
+    const match = SHAPES.find((s) => s.id === id);
+    return match ? match.label : "Shot shape";
+  }
   function recommendDisc({ distance, shape, wind, throwType, risk }, discsList = DISCS, distanceBands = getDistanceBands(1), armFactor = 1) {
     const dist = distanceBands.find((d) => d.id === distance);
     const targetFt = dist ? dist.mid : 250 * armFactor;
@@ -23112,7 +23116,7 @@
       ] })
     ] });
   }
-  function Recommendation({ results, answers, reset, animKey, openDetail, bag, distanceBands, armFactor }) {
+  function Recommendation({ results, answers, reset, setThrowType, animKey, openDetail, bag, distanceBands, armFactor }) {
     const top = results[0];
     const alts = results.slice(1, 3);
     const disc = top.disc;
