@@ -22303,7 +22303,7 @@
       return { disc, score: Math.round(score), why, whyNot };
     });
     results.sort((a, b) => b.score - a.score);
-    const top = results[0].score;
+    const top = results[0] ? results[0].score : 0;
     return results.map((r) => ({
       ...r,
       confidence: Math.max(5, Math.min(99, Math.round(38 + r.score / Math.max(top, 1) * 60))),
@@ -22853,7 +22853,7 @@
       }, scaledBag, distanceBands, armFactor);
     }, [answers, done, scaledBag, distanceBands, armFactor]);
     (0, import_react2.useEffect)(() => {
-      if (results) {
+      if (Array.isArray(results) && results.length) {
         setAnimKey((k) => k + 1);
         const id = results[0].disc.id;
         setStats((s) => ({ ...s, [id]: (s[id] || 0) + 1 }));
@@ -23069,10 +23069,10 @@
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "fade-up", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex gap-1.5 mb-4", children: QUESTIONS.map((_, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "h-1.5 flex-1 rounded-full", style: { background: i < step ? "#4ADE80" : i === step ? "rgba(74,222,128,0.45)" : "rgba(255,255,255,0.1)" } }, i)) }),
       step > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex flex-wrap gap-2 mb-4", children: [
-        answers.distance && chip(distanceBands.find((d) => d.id === answers.distance).label, () => {
+        answers.distance && chip((distanceBands.find((d) => d.id === answers.distance) || { label: "Distance" }).label, () => {
           setStep(0);
         }),
-        answers.shape && chip(SHAPES.find((s) => s.id === answers.shape).label, () => {
+        answers.shape && chip(shapeLabel(answers.shape), () => {
           setStep(1);
         }),
         Array.isArray(answers.conditions) && answers.conditions.map((id) => {
@@ -23117,13 +23117,20 @@
     ] });
   }
   function Recommendation({ results, answers, reset, setThrowType, animKey, openDetail, bag, distanceBands, armFactor }) {
-    const top = results[0];
-    const alts = results.slice(1, 3);
+    const safeResults = Array.isArray(results) ? results : [];
+    const top = safeResults[0];
+    if (!top) {
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "fade-up", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: reset, className: "text-sm font-semibold px-4 py-2 rounded-full border border-white/15 bg-white/5 active:scale-95 mb-4", children: "\u2190 New shot" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Glass, { className: "px-5 py-5", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-sm text-white/70", children: "I could not build a recommendation for that shot yet." }) })
+      ] });
+    }
+    const alts = safeResults.slice(1, 3);
     const disc = top.disc;
-    const dist = distanceBands.find((d) => d.id === answers.distance);
-    const shape = SHAPES.find((s) => s.id === answers.shape);
-    const comfortable = Math.min(disc.sweetMax, disc.maxDist - 20);
-    const flickWhyNot = disc.id !== "flick" ? results.find((r) => r.disc.id === "flick") : null;
+    const dist = distanceBands.find((d) => d.id === answers.distance) || { label: "Distance" };
+    const shape = SHAPES.find((s) => s.id === answers.shape) || { label: "Shot shape", id: "straight" };
+    const comfortable = Math.min(disc.sweetMax || 0, (disc.maxDist || 0) - 20);
+    const flickWhyNot = disc.id !== "flick" ? safeResults.find((r) => r.disc.id === "flick") : null;
     const avoid = [];
     if (disc.stability <= -0.8) avoid.push("Strong headwind \u2014 it will turn over");
     if (disc.fade < 2) avoid.push("Shots that need a big skip finish");
@@ -23139,7 +23146,7 @@
           " \xB7 ",
           shape.label,
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
-          answers.throwType === "backhand" ? "Backhand" : "Forehand",
+          answers.throwType === "forehand" ? "Forehand" : "Backhand",
           " \xB7 ",
           answers.risk === "safe" ? "Safe" : "Aggressive"
         ] })
