@@ -21826,29 +21826,6 @@
   var import_jsx_runtime = __toESM(require_jsx_runtime());
   var DISCS = [
     {
-      id: "aviar",
-      name: "Super Aviar",
-      brand: "Innova",
-      speed: 2,
-      glide: 3,
-      turn: 0,
-      fade: 1,
-      color: "#E8E4D8",
-      ring: "#B8B29E",
-      confidence: 4,
-      stability: 0.6,
-      category: "putter",
-      role: "Putting putter",
-      sweetMin: 0,
-      sweetMax: 80,
-      maxDist: 150,
-      uses: ["Putting", "Short approaches", "Touch shots"],
-      worst: ["Anything past 150 ft", "Strong headwind drives"],
-      notes: "The scoring club. Trust the glide inside the circle and keep approaches low.",
-      quote: "Smooth is far enough. Let the Aviar do the work.",
-      wind: "Fine in calm to moderate wind at putting range. Skies in a big headwind."
-    },
-    {
       id: "pure",
       name: "Pure",
       brand: "Latitude 64",
@@ -21858,18 +21835,110 @@
       fade: 1,
       color: "#7DD3FC",
       ring: "#4BA8D6",
-      confidence: 4,
-      stability: -0.1,
+      confidence: 5,
+      stability: 0.1,
       category: "putter",
-      role: "Throwing putter",
-      sweetMin: 50,
-      sweetMax: 190,
+      role: "Short, straight throwing putter",
+      sweetMin: 100,
+      sweetMax: 200,
+      maxDist: 220,
+      uses: ["Short straight approaches", "Tunnel shots", "Landing close to the line", "100-200 foot shots"],
+      worst: ["Strong headwinds", "Shots that need a big left finish"],
+      notes: "Mostly straight with very little left finish. This is the cleanest choice when you want the disc to stay on the line you aimed at.",
+      quote: "Use the Pure when the shot should stay simple.",
+      wind: "Best in calm air. It can drift if you push it hard into a headwind."
+    },
+    {
+      id: "pa5",
+      name: "PA-5",
+      brand: "Prodigy",
+      speed: 3,
+      glide: 4,
+      turn: -2,
+      fade: 0,
+      color: "#FBBF24",
+      ring: "#D69E12",
+      confidence: 4,
+      stability: -1.5,
+      category: "putter",
+      role: "Short right-moving approach disc",
+      sweetMin: 80,
+      sweetMax: 170,
+      maxDist: 190,
+      uses: ["Short shots that bend right", "Gentle turnover approaches", "Short wooded lines", "Shots where the Pure stays too straight"],
+      worst: ["Headwinds", "Anything that must finish left"],
+      notes: "Very light at about 142 g, so it wants to turn right easily. Great for controlled right-moving shapes when you keep it smooth.",
+      quote: "When you need right, the light PA-5 gets there fast.",
+      wind: "The light weight makes it wind-sensitive. Tailwind is fine; headwind can make it turn early."
+    },
+    {
+      id: "a5",
+      name: "A5",
+      brand: "Prodigy",
+      speed: 4,
+      glide: 3,
+      turn: 0,
+      fade: 1,
+      color: "#6EE7B7",
+      ring: "#2D9C73",
+      confidence: 2,
+      stability: 0.7,
+      category: "putter",
+      role: "Straight approach with a small left finish",
+      sweetMin: 150,
+      sweetMax: 225,
       maxDist: 240,
-      uses: ["Throwing putter", "Long putts", "Straight approaches"],
-      worst: ["Headwind drives", "Skip finishes"],
-      notes: "The approach workhorse. Dead straight off the hand with a soft touch landing \u2014 parks C2 looks.",
-      quote: "Inside 200, put the Pure on the target and let it sit.",
-      wind: "Calm and tailwind friendly. Turns over if you drive it into a headwind."
+      uses: ["Controlled approaches", "More finish than the Pure", "Short-to-medium straight shots"],
+      worst: ["Shots that need to move right", "Hard headwinds if this is not the disc you meant"],
+      notes: "This disc is tentatively identified, so confidence is lower. If it is the A5, it should fly mostly straight and finish left a little more than the Pure.",
+      quote: "If this is the A5, it is your in-between approach disc.",
+      wind: "Should be usable in calm to light wind, but the exact disc is still tentative."
+    },
+    {
+      id: "a3",
+      name: "A3",
+      brand: "Prodigy",
+      speed: 4,
+      glide: 4,
+      turn: 0,
+      fade: 3,
+      color: "#F97316",
+      ring: "#C2410C",
+      confidence: 5,
+      stability: 2.2,
+      category: "putter",
+      role: "Dependable left-finishing approach disc",
+      sweetMin: 150,
+      sweetMax: 250,
+      maxDist: 260,
+      uses: ["Approaches that must finish left", "Controlled 150-250 foot shots", "Moderate wind", "Firm throws that should not drift right"],
+      worst: ["Shots that need to move right", "Touchy understable lines"],
+      notes: "Straight at first, then clearly finishes left. This is the disc to trust when you want a firm throw and a reliable finish.",
+      quote: "Throw it with confidence and let the A3 finish the job.",
+      wind: "A good choice in moderate wind. It keeps its line better than the straighter putters."
+    },
+    {
+      id: "a2",
+      name: "A2",
+      brand: "Prodigy",
+      speed: 4,
+      glide: 2,
+      turn: 0,
+      fade: 4,
+      color: "#9CA3AF",
+      ring: "#6B7280",
+      confidence: 4,
+      stability: 3.1,
+      category: "putter",
+      role: "Hard-left utility approach disc",
+      sweetMin: 90,
+      sweetMax: 180,
+      maxDist: 200,
+      uses: ["Sharp left turns", "Getting around obstacles", "Skip-style approaches", "Wind", "Specialty shots with a strong left finish"],
+      worst: ["Straight touch shots", "Easy right-moving lines"],
+      notes: "A short, forceful option for left finish and utility work. The light weight may make it a little less extreme than a normal A2, but it still wants to dump left.",
+      quote: "When the line bends hard left, the A2 is the tool.",
+      wind: "Useful in wind, but the very light weight can make it more readable to the air than a heavier overstable approach disc."
     },
     {
       id: "origin",
@@ -21878,67 +21947,44 @@
       speed: 5,
       glide: 6,
       turn: 0,
-      fade: 0.5,
+      fade: 1,
       color: "#5B9BD5",
       ring: "#3E76AB",
-      confidence: 4,
+      confidence: 5,
       stability: 0.3,
       category: "mid",
-      role: "Neutral midrange",
-      sweetMin: 60,
-      sweetMax: 220,
-      maxDist: 260,
-      uses: ["Dead-straight midrange", "Woods", "Technical shots"],
-      worst: ["Headwind bombs", "Big skip finishes"],
-      notes: "Point and shoot. This disc holds whatever line you put it on, which makes it the woods weapon.",
-      quote: "In the trees, speed is the enemy. Throw the Origin.",
-      wind: "Great in calm air and tailwinds. Gets flippy in a real headwind."
+      role: "Medium-distance straight midrange",
+      sweetMin: 180,
+      sweetMax: 275,
+      maxDist: 290,
+      uses: ["Straight midrange shots", "Longer tunnel shots", "Gentle right-moving midrange shots", "Controlled 180-275 foot shots"],
+      worst: ["Strong headwinds", "Big left-finish drives"],
+      notes: "Straight with good glide and just enough give to move right if you throw it hard. This is the clean midrange answer.",
+      quote: "For midrange control, the Origin is the simple answer.",
+      wind: "Good in calm air and light tailwind. It can get pushed around in a headwind."
     },
     {
       id: "leopard3",
       name: "Leopard3",
       brand: "Innova",
       speed: 7,
-      glide: 6,
+      glide: 5,
       turn: -2,
       fade: 1,
       color: "#4ADE80",
       ring: "#22A85A",
       confidence: 5,
-      stability: -0.8,
+      stability: -0.6,
       category: "fairway",
-      role: "Control fairway",
-      sweetMin: 150,
+      role: "Controlled longer right-moving fairway driver",
+      sweetMin: 225,
       sweetMax: 300,
-      maxDist: 320,
-      uses: ["Accurate drives", "Tunnel shots", "Controlled distance", "Fairways"],
-      worst: ["Strong headwinds", "Hard skip shots"],
-      notes: "Your confidence disc. Years of reps. It turns gently, rides forever, and lands soft with a gentle finish.",
-      quote: "When in doubt\u2026 throw the Leopard3.",
-      wind: "Loves calm air and tailwinds. Respect it in a headwind \u2014 it will turn over."
-    },
-    {
-      id: "thunderbird",
-      name: "Thunderbird",
-      brand: "Innova Champion",
-      speed: 9,
-      glide: 5,
-      turn: 0,
-      fade: 2,
-      color: "#FB923C",
-      ring: "#D0721E",
-      confidence: 4,
-      stability: 1.4,
-      category: "fairway",
-      role: "Stable control driver",
-      sweetMin: 230,
-      sweetMax: 310,
-      maxDist: 330,
-      uses: ["Stable control drives", "Headwind fairways", "Forehand control", "Reliable finish"],
-      worst: ["Tight touch lines", "Max-glide tailwind bombs"],
-      notes: "The workhorse driver. Torque-proof, wind-proof, same finish every time. This is the forehand control answer.",
-      quote: "Trust the Thunderbird when the shot has to finish.",
-      wind: "Built for headwinds and crosswinds. The windier it gets, the more it earns."
+      maxDist: 315,
+      uses: ["Woods", "Controlled fairway drives", "Longer shots that need to move right", "Straight shots without a strong left finish"],
+      worst: ["Strong headwinds", "Hard left-finish shots"],
+      notes: "This gives you a gentle move right and only a small left finish. It is the controlled fairway choice when you do not want the disc to fight back too hard.",
+      quote: "Use the Leopard3 when control matters more than pure power.",
+      wind: "Great in calm air and tailwind. Headwind can make it turn more than you want."
     },
     {
       id: "heat",
@@ -21950,18 +21996,41 @@
       fade: 1,
       color: "#F97362",
       ring: "#D2493A",
-      confidence: 3,
+      confidence: 4,
       stability: -1.4,
       category: "distance",
-      role: "Understable distance",
-      sweetMin: 220,
+      role: "Long, easy-distance right-moving driver",
+      sweetMin: 240,
       sweetMax: 320,
-      maxDist: 340,
-      uses: ["Easy distance", "Long glide", "Tailwinds", "Turnovers"],
-      worst: ["Any headwind", "Shots that must finish left (BH)"],
-      notes: "Free distance with a smooth pull. The most understable disc in the bag \u2014 it wants to ride right and glide.",
-      quote: "Don't muscle it. The Heat rewards smooth.",
-      wind: "A tailwind specialist. Even a light headwind will flip it."
+      maxDist: 335,
+      uses: ["Long shots that need to move right", "Easy distance", "Open shots with room to drift", "Tailwinds", "Longer wooded lines"],
+      worst: ["Headwinds", "Shots that need to finish left"],
+      notes: "More right movement than the Leopard3 and a lot of glide. This is the easy-distance disc when you have room to work with it.",
+      quote: "If the line opens right, the Heat likes it.",
+      wind: "Tailwind friendly. It can turn hard if the wind is coming at you."
+    },
+    {
+      id: "thunderbird",
+      name: "Thunderbird",
+      brand: "Innova",
+      speed: 9,
+      glide: 5,
+      turn: 0,
+      fade: 2,
+      color: "#FB923C",
+      ring: "#D0721E",
+      confidence: 5,
+      stability: 1.7,
+      category: "fairway",
+      role: "Long, dependable driver with a left finish",
+      sweetMin: 250,
+      sweetMax: 300,
+      maxDist: 320,
+      uses: ["Accurate drives", "Shots that cannot turn right", "Moderate headwinds", "Controlled left-finishing drives", "Lower-ceiling drives"],
+      worst: ["Big right-moving lines", "Tight touch shots"],
+      notes: "Mostly straight, then reliably finishes left. This is the accuracy-first long driver when you want the shot to stay honest.",
+      quote: "When accuracy matters, throw the Thunderbird.",
+      wind: "A strong choice in moderate headwind and crosswind."
     },
     {
       id: "grace",
@@ -21969,22 +22038,45 @@
       brand: "Latitude 64",
       speed: 11,
       glide: 6,
-      turn: -2,
+      turn: -1,
       fade: 2,
       color: "#A78BFA",
       ring: "#7C5CE0",
-      confidence: 4,
-      stability: -0.3,
+      confidence: 5,
+      stability: 0.7,
       category: "distance",
-      role: "Primary distance driver",
-      sweetMin: 260,
-      sweetMax: 340,
-      maxDist: 360,
-      uses: ["Long open drives", "Max distance", "Workable big lines"],
-      worst: ["Tight woods", "Touch shots under 240 ft"],
-      notes: "Primary distance driver. A touch of turn into a long glide phase, then a dependable finish you can plan around.",
-      quote: "Open fairway, full send. The Grace goes.",
-      wind: "Fine in calm air and crosswind. Careful driving it into a real headwind."
+      role: "Primary long-distance driver",
+      sweetMin: 250,
+      sweetMax: 300,
+      maxDist: 330,
+      uses: ["Normal maximum-distance drives", "Open fairways", "Long controlled drives", "Shots with room for a normal left finish"],
+      worst: ["Tight woods", "Shots that need a strong right move"],
+      notes: "This should be the default long-drive choice when nothing unusual is going on. It gives you distance without forcing a dramatic finish.",
+      quote: "For a normal long drive, the Grace is the default.",
+      wind: "Solid in calm air. In a headwind, expect it to show a little more movement."
+    },
+    {
+      id: "d3",
+      name: "D3",
+      brand: "Prodigy",
+      speed: 11,
+      glide: 5,
+      turn: -1,
+      fade: 3,
+      color: "#60A5FA",
+      ring: "#2563EB",
+      confidence: 5,
+      stability: 1.4,
+      category: "distance",
+      role: "Long drive with a stronger left finish than the Grace",
+      sweetMin: 250,
+      sweetMax: 300,
+      maxDist: 330,
+      uses: ["Long open drives", "Long shots that need to finish left", "Situations where you want more finish than the Grace"],
+      worst: ["Shots that need a gentle right move", "Touchy wooded lines"],
+      notes: "Its practical difference from the Grace is the stronger left finish. Use it when the Grace would stay too straight or not finish enough.",
+      quote: "The D3 is your long-drive option when you want more finish.",
+      wind: "Handles moderate wind better than the Grace and gives a more committed left finish."
     },
     {
       id: "flick",
@@ -21996,18 +22088,18 @@
       fade: 6,
       color: "#FBBF24",
       ring: "#D69E12",
-      confidence: 2,
+      confidence: 3,
       stability: 3.5,
       category: "distance",
-      role: "Utility / overstable",
-      sweetMin: 200,
-      sweetMax: 300,
-      maxDist: 310,
-      uses: ["Strong headwind", "Big skip", "Sharp dogleg", "Escape shot"],
-      worst: ["Anything straight", "Calm-air distance", "Touch shots"],
-      notes: "Utility only. A meathook. It exists for wind, skips, and getting out of jail \u2014 nothing else.",
-      quote: "The Flick is a tool, not a driver.",
-      wind: "The headwind answer. The stronger the wind, the better it looks."
+      role: "Extreme left-finishing utility disc",
+      sweetMin: 150,
+      sweetMax: 250,
+      maxDist: 290,
+      uses: ["Extreme left turns", "Strong headwinds", "Skip shots", "Forehand utility shots", "Overhead or recovery shots", "Getting around obstacles"],
+      worst: ["Normal open backhand drives", "Straight distance shots", "Touch approaches"],
+      notes: "This is a recovery and utility disc, not an ordinary distance driver. It wants to move left very quickly with very little glide.",
+      quote: "The Flick stays on the shelf until the shot really calls for it.",
+      wind: "Useful in strong headwind or recovery situations. Rarely the answer for a normal drive."
     }
   ];
   var DISC_BY_ID = Object.fromEntries(DISCS.map((d) => [d.id, d]));
@@ -22027,11 +22119,9 @@
     return { ...d, sweetMin: scaleFt(d.sweetMin, factor), sweetMax: scaleFt(d.sweetMax, factor), maxDist: scaleFt(d.maxDist, factor) };
   }
   var BASE_DISTANCES = [
-    { id: "putt", label: "Putting", dot: "#4ADE80", baseMin: 0, baseMax: 60, baseMid: 35 },
-    { id: "approach", label: "Approach", dot: "#4ADE80", baseMin: 60, baseMax: 150, baseMid: 105 },
-    { id: "short", label: "Short Drive", dot: "#FBBF24", baseMin: 150, baseMax: 240, baseMid: 195 },
-    { id: "fairway", label: "Fairway", dot: "#FB923C", baseMin: 240, baseMax: 300, baseMid: 270 },
-    { id: "long", label: "Long Drive", dot: "#F87171", baseMin: 300, baseMax: null, baseMid: 315 }
+    { id: "short", label: "Short", dot: "#4ADE80", baseMin: 0, baseMax: 180, baseMid: 140 },
+    { id: "medium", label: "Medium", dot: "#FBBF24", baseMin: 180, baseMax: 250, baseMid: 215 },
+    { id: "long", label: "Long", dot: "#F87171", baseMin: 250, baseMax: null, baseMid: 280 }
   ];
   function getDistanceBands(factor = 1) {
     return BASE_DISTANCES.map((b) => {
@@ -22043,12 +22133,10 @@
   }
   var SHAPES = [
     { id: "straight", label: "Straight", glyph: "arrow-up" },
-    { id: "gentleRight", label: "Gentle Right", glyph: "arrow-ne" },
-    { id: "gentleLeft", label: "Gentle Left", glyph: "arrow-nw" },
-    { id: "bigRight", label: "Big Right", glyph: "hook-right" },
-    { id: "bigLeft", label: "Big Left", glyph: "hook-left" },
-    { id: "escape", label: "Escape", glyph: "trees" },
-    { id: "headwind", label: "Headwind", glyph: "wind" }
+    { id: "right", label: "Finish Right", glyph: "arrow-ne" },
+    { id: "slightLeft", label: "Slight Finish Left", glyph: "arrow-nw" },
+    { id: "strongLeft", label: "Strong Finish Left", glyph: "hook-left" },
+    { id: "extremeLeft", label: "Extreme Left", glyph: "hook-left" }
   ];
   function recommendDisc({ distance, shape, wind, throwType, risk }, discsList = DISCS, distanceBands = getDistanceBands(1), armFactor = 1) {
     const dist = distanceBands.find((d) => d.id === distance);
@@ -22213,6 +22301,200 @@
       stars: r.score >= top - 3 ? 5 : r.score >= top - 12 ? 4 : r.score >= top - 24 ? 3 : r.score >= top - 40 ? 2 : 1
     }));
   }
+  function normalizeConditions(conditions) {
+    return Array.isArray(conditions) ? conditions.filter(Boolean) : [];
+  }
+  function hasCondition(conditions, id) {
+    return normalizeConditions(conditions).includes(id);
+  }
+  function distanceBucket(distance) {
+    if (distance === "short") return { id: "short", label: "Short", mid: 140 };
+    if (distance === "medium") return { id: "medium", label: "Medium", mid: 215 };
+    return { id: "long", label: "Long", mid: 280 };
+  }
+  function expectedFlightText(disc) {
+    switch (disc.id) {
+      case "pure":
+        return "Mostly straight with very little left finish.";
+      case "pa5":
+        return "Easy right movement with a soft finish.";
+      case "a5":
+        return "Mostly straight with a small left finish.";
+      case "a3":
+        return "Straight at first, then clearly finishes left.";
+      case "a2":
+        return "Shorter flight with a strong left finish.";
+      case "origin":
+        return "Straight with good glide, and maybe a gentle move right if thrown hard.";
+      case "leopard3":
+        return "Gentle move right with only a small left finish.";
+      case "heat":
+        return "More right movement than the Leopard3 and lots of glide.";
+      case "thunderbird":
+        return "Mostly straight, then reliably finishes left.";
+      case "grace":
+        return "Fairly straight with some possible right movement, then a moderate left finish.";
+      case "d3":
+        return "Fairly straight at first, then a stronger left finish than the Grace.";
+      case "flick":
+        return "Moves left quickly with very little glide.";
+      default:
+        return disc.notes;
+    }
+  }
+  function releaseCue(shape, throwType, disc) {
+    if (disc.id === "flick" || disc.id === "a2") return "Aim at the opening and let it finish hard left.";
+    if (shape === "right") return "Start it on the line and let it drift right.";
+    if (shape === "slightLeft") return "Release flat and trust a small left finish.";
+    if (shape === "strongLeft") return "Aim at the middle of the gap and let it finish left.";
+    if (shape === "extremeLeft") return "Give it room early and let it dump left.";
+    if (throwType === "forehand") return "Keep it smooth and on the line.";
+    return "Release it flat on the center line.";
+  }
+  function confidenceLevel(disc, score, topScore) {
+    if (disc.id === "a5") return { label: "Low", value: 42 };
+    const gap = topScore - score;
+    if (gap <= 4) return { label: "High", value: 88 };
+    if (gap <= 10) return { label: "Medium", value: 72 };
+    return { label: "Low", value: 55 };
+  }
+  function isSimplerFit(disc, distanceId) {
+    if (distanceId === "short") return disc.speed <= 4;
+    if (distanceId === "medium") return disc.speed <= 9;
+    return disc.speed >= 5;
+  }
+  function plainRecommendDisc({ distance, shape, conditions, throwType }, discsList = DISCS, distanceBands = getDistanceBands(1), armFactor = 1) {
+    const dist = distanceBands.find((d) => d.id === distance) || distanceBucket(distance);
+    const targetFt = dist.mid || 215 * armFactor;
+    const conds = normalizeConditions(conditions);
+    const isFH = throwType === "forehand";
+    const plan = {
+      short: {
+        straight: ["pure", "origin", "a5"],
+        right: ["pa5", "heat"],
+        slightLeft: ["a5", "a3"],
+        strongLeft: ["a3", "a2"],
+        extremeLeft: ["a2", "flick"]
+      },
+      medium: {
+        straight: ["origin", "pure", "leopard3"],
+        right: ["origin", "leopard3", "heat"],
+        slightLeft: ["a3", "thunderbird", "a5"],
+        strongLeft: ["a2", "thunderbird", "d3"],
+        extremeLeft: ["a2", "flick"]
+      },
+      long: {
+        straight: ["grace", "thunderbird", "origin"],
+        right: ["heat", "leopard3"],
+        slightLeft: ["leopard3", "heat", "origin"],
+        strongLeft: ["d3", "thunderbird", "a2"],
+        extremeLeft: ["flick", "a2"]
+      }
+    };
+    const preferred = plan[dist.id] && plan[dist.id][shape] ? plan[dist.id][shape] : ["grace"];
+    const results = discsList.map((disc) => {
+      let score = 0;
+      const why = [];
+      const whyNot = [];
+      const preferredRank = preferred.indexOf(disc.id);
+      if (preferredRank === 0) {
+        score += 65;
+        why.push("This is the simplest disc for this shot.");
+      } else if (preferredRank === 1) {
+        score += 45;
+      } else if (preferredRank === 2) {
+        score += 25;
+      } else {
+        score += 8;
+      }
+      if (targetFt >= disc.sweetMin && targetFt <= disc.sweetMax) {
+        score += 18;
+        why.push("This distance sits in its comfort zone.");
+      } else if (targetFt < disc.sweetMin) {
+        score -= Math.min(20, (disc.sweetMin - targetFt) / 12);
+        whyNot.push("It is more disc than you need for this distance.");
+      } else if (targetFt > disc.maxDist) {
+        score -= Math.min(24, (targetFt - disc.maxDist) / 10);
+        whyNot.push("You would have to force it farther than it wants to go.");
+      }
+      if (!isSimplerFit(disc, dist.id)) score -= dist.id === "short" ? 10 : dist.id === "medium" ? 6 : 0;
+      if (shape === "straight") {
+        if (["pure", "origin", "grace", "thunderbird"].includes(disc.id)) score += 10;
+        if (disc.id === "flick") score -= 25;
+      }
+      if (shape === "right") {
+        if (["pa5", "heat", "leopard3", "origin"].includes(disc.id)) score += 14;
+        if (["thunderbird", "d3", "flick"].includes(disc.id)) score -= 4;
+      }
+      if (shape === "slightLeft") {
+        if (["a5", "a3", "leopard3", "thunderbird", "grace"].includes(disc.id)) score += 14;
+      }
+      if (shape === "strongLeft") {
+        if (["a3", "a2", "thunderbird", "d3"].includes(disc.id)) score += 16;
+      }
+      if (shape === "extremeLeft") {
+        if (disc.id === "flick") score += 28;
+        if (disc.id === "a2") score += 18;
+      }
+      if (hasCondition(conds, "woods")) {
+        if (["pure", "origin", "leopard3", "a3"].includes(disc.id)) score += 10;
+        if (["flick", "grace", "d3"].includes(disc.id) && dist.id !== "long") score -= 4;
+        why.push("Tight woods favor the simpler, straighter options.");
+      }
+      if (hasCondition(conds, "open")) {
+        if (["grace", "d3", "heat", "thunderbird"].includes(disc.id)) score += 6;
+      }
+      if (hasCondition(conds, "headwind")) {
+        if (["thunderbird", "a3", "a2", "d3", "flick"].includes(disc.id)) score += 16;
+        if (["pa5", "heat", "leopard3", "pure"].includes(disc.id)) score -= 18;
+        if (disc.id === "a5") score -= 8;
+        why.push("Headwind calls for more stability and less carry to the right.");
+      }
+      if (hasCondition(conds, "tailwind")) {
+        if (["pa5", "heat", "leopard3", "grace"].includes(disc.id)) score += 12;
+        if (["a2", "flick"].includes(disc.id) && shape !== "extremeLeft") score -= 10;
+      }
+      if (hasCondition(conds, "lowCeiling")) {
+        if (["pure", "a3", "a2", "thunderbird", "leopard3"].includes(disc.id)) score += 10;
+        if (["heat", "grace"].includes(disc.id)) score -= 5;
+      }
+      if (hasCondition(conds, "avoidRight")) {
+        if (["a3", "a2", "thunderbird", "grace", "d3", "flick"].includes(disc.id)) score += 14;
+        if (["pa5", "heat", "leopard3", "origin"].includes(disc.id)) score -= 10;
+      }
+      if (hasCondition(conds, "avoidLeft")) {
+        if (["pure", "pa5", "origin", "heat", "leopard3"].includes(disc.id)) score += 14;
+        if (["a3", "a2", "thunderbird", "grace", "d3", "flick"].includes(disc.id)) score -= 10;
+      }
+      if (hasCondition(conds, "recovery")) {
+        if (disc.id === "flick") score += 24;
+        if (disc.id === "a2") score += 18;
+        if (disc.id === "thunderbird") score += 10;
+      }
+      if (isFH) {
+        if (["thunderbird", "a2", "flick", "d3"].includes(disc.id)) score += 8;
+        if (["pa5", "heat", "pure", "origin"].includes(disc.id)) score -= 4;
+      }
+      if (disc.id === "a5") score -= 2;
+      const confidence = confidenceLevel(disc, score, 100);
+      const summary = disc.id === "a5" ? "Tentative match. This looks like the A5, but the identification is not fully confirmed." : preferredRank === 0 ? `Use the ${disc.name}.` : `The ${disc.name} is the backup if you want a different finish.`;
+      const release = releaseCue(shape, isFH ? "forehand" : "backhand", disc);
+      return {
+        disc,
+        score: Math.round(score),
+        why,
+        whyNot,
+        summary,
+        flight: expectedFlightText(disc),
+        release,
+        confidence: confidence.value,
+        confidenceLabel: confidence.label,
+        stars: confidence.value >= 80 ? 5 : confidence.value >= 70 ? 4 : confidence.value >= 55 ? 3 : 2
+      };
+    });
+    results.sort((a, b) => b.score - a.score);
+    return results;
+  }
   function topDownPath(disc, throwType, W = 220, H = 300) {
     const mirror = throwType === "sidearm" ? -1 : 1;
     const turnPx = disc.turn * 16 * -1;
@@ -22342,12 +22624,12 @@
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("text", { x: W / 2 - 26, y: "14", fontSize: "9", fill: "var(--dc-muted)", style: { letterSpacing: "0.15em" }, children: "SIDE VIEW" })
     ] });
   }
-  var QUESTIONS = ["distance", "shape", "throwType", "risk"];
+  var QUESTIONS = ["distance", "shape", "conditions"];
   function App() {
     const [tab, setTab] = (0, import_react2.useState)("caddy");
     const [theme, setTheme] = (0, import_react2.useState)("dark");
     const [step, setStep] = (0, import_react2.useState)(0);
-    const [answers, setAnswers] = (0, import_react2.useState)({});
+    const [answers, setAnswers] = (0, import_react2.useState)({ conditions: [], throwType: "backhand", risk: "safe" });
     const [detail, setDetail] = (0, import_react2.useState)(null);
     const [animKey, setAnimKey] = (0, import_react2.useState)(0);
     const [stats, setStats] = (0, import_react2.useState)({});
@@ -22546,15 +22828,14 @@
       "--dc-svg-faint": "rgba(255, 255, 255, 0.08)"
     };
     const pageStyle = isLight ? { background: "radial-gradient(1200px 800px at 50% -10%, #F3F8F1 0%, #EEF4EB 55%, #E7ECE4 100%)" } : { background: "radial-gradient(1200px 800px at 50% -10%, #12241A 0%, #0B0F0D 55%, #070A08 100%)" };
-    const done = QUESTIONS.every((q) => answers[q]);
+    const done = step >= QUESTIONS.length && answers.distance && answers.shape;
     const results = (0, import_react2.useMemo)(() => {
       if (!done) return null;
-      return recommendDisc({
+      return plainRecommendDisc({
         distance: answers.distance,
         shape: answers.shape,
-        wind: answers.shape === "headwind" ? "headwind" : "calm",
-        throwType: answers.throwType,
-        risk: answers.risk
+        conditions: answers.conditions || [],
+        throwType: answers.throwType || "backhand"
       }, scaledBag, distanceBands, armFactor);
     }, [answers, done, scaledBag, distanceBands, armFactor]);
     (0, import_react2.useEffect)(() => {
@@ -22565,11 +22846,20 @@
       }
     }, [done]);
     const pick = (q, v) => {
+      if (q === "conditions") {
+        setAnswers((a) => {
+          const cur = Array.isArray(a.conditions) ? a.conditions : [];
+          const next = cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v];
+          return { ...a, conditions: next };
+        });
+        return;
+      }
       setAnswers((a) => ({ ...a, [q]: v }));
       setStep((s) => Math.min(s + 1, QUESTIONS.length));
     };
+    const setThrowType = (throwType) => setAnswers((a) => ({ ...a, throwType }));
     const reset = () => {
-      setAnswers({});
+      setAnswers({ conditions: [], throwType: "backhand", risk: "safe" });
       setStep(0);
     };
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: `${isLight ? "theme-light" : "theme-dark"} min-h-screen`, style: { ...themeVars, ...pageStyle, color: "var(--dc-text)", fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif" }, children: [
@@ -22643,6 +22933,7 @@
               pick,
               reset,
               setStep,
+              setThrowType,
               animKey,
               openDetail: (d) => setDetail(d),
               bag: scaledBag,
@@ -22737,7 +23028,7 @@
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AddDiscForm, { bag, onAdd })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex gap-3 mt-2", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: onUseSample, className: "flex-1 py-3 rounded-2xl font-bold text-sm border border-white/15 text-white/60 active:scale-95", children: "Restore demo bag" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: onUseSample, className: "flex-1 py-3 rounded-2xl font-bold text-sm border border-white/15 text-white/60 active:scale-95", children: "Load current bag" }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "button",
           {
@@ -22749,12 +23040,12 @@
           }
         )
       ] }),
-      bag.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-center text-xs text-white/30 mt-3", children: "Add at least one disc, or restore the demo bag to continue." })
+      bag.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-center text-xs text-white/30 mt-3", children: "Add at least one disc, or load the current bag to continue." })
     ] });
   }
-  function CaddyFlow({ step, answers, results, done, pick, reset, setStep, animKey, openDetail, bag, distanceBands, armFactor }) {
+  function CaddyFlow({ step, answers, results, done, pick, reset, setStep, setThrowType, animKey, openDetail, bag, distanceBands, armFactor }) {
     if (done && results) {
-      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Recommendation, { results, answers, reset, animKey, openDetail, bag, distanceBands, armFactor });
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Recommendation, { results, answers, reset, setThrowType, animKey, openDetail, bag, distanceBands, armFactor });
     }
     const q = QUESTIONS[step];
     const chip = (label, onBack) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", { onClick: onBack, className: "px-3 py-1.5 rounded-full text-xs font-semibold border border-white/15 bg-white/5 text-white/70 active:scale-95", children: [
@@ -22770,8 +23061,9 @@
         answers.shape && chip(SHAPES.find((s) => s.id === answers.shape).label, () => {
           setStep(1);
         }),
-        answers.throwType && chip(answers.throwType === "backhand" ? "Backhand" : "Sidearm", () => {
-          setStep(2);
+        Array.isArray(answers.conditions) && answers.conditions.map((id) => {
+          const item = CONDITIONS.find((c) => c.id === id);
+          return item ? chip(item.label, () => pick("conditions", id)) : null;
         })
       ] }),
       q === "distance" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
@@ -22793,23 +23085,19 @@
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "font-semibold", children: s.label })
         ] }, s.id)) })
       ] }),
-      q === "throwType" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { className: "text-3xl font-bold mb-1 tracking-tight", children: "Throw type" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-5", children: "How are you throwing it?" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex flex-col gap-4", children: [["backhand", "Backhand"], ["sidearm", "Sidearm"]].map(([id, label]) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Glass, { onClick: () => pick("throwType", id), className: "px-6 py-8 text-center", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-2xl font-bold", children: label }) }, id)) })
-      ] }),
-      q === "risk" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { className: "text-3xl font-bold mb-1 tracking-tight", children: "Risk" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-5", children: "Protect the score, or attack the pin?" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex flex-col gap-4", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { onClick: () => pick("risk", "safe"), className: "px-6 py-7 text-center", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-2xl font-bold", style: { color: "#4ADE80" }, children: "Safe" }),
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-white/50 text-sm mt-1", children: "Familiar disc, predictable finish" })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { onClick: () => pick("risk", "aggressive"), className: "px-6 py-7 text-center", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-2xl font-bold", style: { color: "#F87171" }, children: "Aggressive" }),
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-white/50 text-sm mt-1", children: "Full send, chase the distance" })
-          ] })
+      q === "conditions" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { className: "text-3xl font-bold mb-1 tracking-tight", children: "Conditions" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-5", children: "Tap any that matter. Leave the rest off." }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "grid grid-cols-1 gap-3 mb-4", children: CONDITIONS.map((c) => {
+          const active = Array.isArray(answers.conditions) && answers.conditions.includes(c.id);
+          return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { onClick: () => pick("conditions", c.id), className: "px-4 py-4 flex items-center justify-between", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "font-semibold", children: c.label }),
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-xs font-semibold px-2.5 py-1 rounded-full", style: { background: active ? "rgba(74,222,128,0.18)" : "rgba(255,255,255,0.06)", color: active ? "#4ADE80" : "var(--dc-muted)" }, children: active ? "On" : "Off" })
+          ] }, c.id);
+        }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex gap-3", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: () => setStep(QUESTIONS.length), className: "flex-1 py-3 rounded-2xl font-bold text-sm active:scale-95 disabled:opacity-30", style: { background: "rgba(74,222,128,0.2)", color: "#4ADE80", border: "1px solid rgba(74,222,128,0.35)" }, children: "See recommendation" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", { onClick: reset, className: "px-4 py-3 rounded-2xl font-bold text-sm border border-white/15 bg-white/5 active:scale-95", children: "Reset" })
         ] })
       ] })
     ] });
@@ -22837,7 +23125,7 @@
           " \xB7 ",
           shape.label,
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("br", {}),
-          answers.throwType === "backhand" ? "Backhand" : "Sidearm",
+          answers.throwType === "backhand" ? "Backhand" : "Forehand",
           " \xB7 ",
           answers.risk === "safe" ? "Safe" : "Aggressive"
         ] })
@@ -22858,7 +23146,7 @@
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-2", children: "Why" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/85 leading-relaxed", children: top.why.length ? top.why.join(" ") : `Best fit in the bag for this line and distance.` })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/85 leading-relaxed", children: top.summary || (top.why.length ? top.why.join(" ") : `Best fit in the bag for this line and distance.`) })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", style: { borderColor: "rgba(125,211,252,0.2)" }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest mb-2", style: { color: "rgba(125,211,252,0.7)" }, children: "Learn \xB7 why this disc over the others" }),
@@ -22867,9 +23155,9 @@
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-4 py-4 mb-4", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-1 px-1", children: [
           "Expected flight \xB7 ",
-          answers.throwType === "backhand" ? "Backhand" : "Sidearm"
+          answers.throwType === "backhand" ? "Backhand" : "Forehand"
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TopDownFlight, { disc, throwType: answers.throwType, animKey: `td-${animKey}` })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TopDownFlight, { disc, throwType: answers.throwType === "forehand" ? "sidearm" : "backhand", animKey: `td-${animKey}` })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-4 py-4 mb-4", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-1 px-1", children: "Glidepath" }),
@@ -22922,7 +23210,7 @@
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DiscImage, { disc: r.disc, size: 48 }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex-1 min-w-0", children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "font-semibold", children: r.disc.name }),
-          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs text-white/50 truncate", children: r.why[0] || r.disc.uses[0] })
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs text-white/50 truncate", children: r.summary || r.why[0] || r.disc.uses[0] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "text-sm font-bold", style: { color: r.disc.color }, children: [
           r.confidence,
@@ -22946,7 +23234,7 @@
     const favorite = Object.entries(stats).filter(([id]) => byId[id]).sort((a, b) => b[1] - a[1])[0];
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "fade-up", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { className: "text-3xl font-bold tracking-tight mb-1", children: "My Bag" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-5", children: "Most understable \u2192 most overstable" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-5", children: "Straighter \u2192 stronger left finish" }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "flex flex-col gap-3", children: ordered.map((d) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { onClick: () => openDetail(d), className: "px-4 py-4 flex items-center gap-4", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DiscImage, { disc: d, size: 64 }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex-1 min-w-0", children: [
@@ -23831,7 +24119,7 @@
     return { unknown: true, query: text };
   }
   var DEFAULT_BAG_TEMPLATES = [
-    { id: "demo-bag", name: "My Bag", description: "Your original demo setup. Always available.", discQueries: ["Aviar", "Pure", "Origin", "Leopard3", "Thunderbird", "Heat", "Grace", "Flick"] },
+    { id: "demo-bag", name: "My Bag", description: "Your current bag. Always available.", discQueries: ["Pure", "PA-5", "A5", "A3", "A2", "Origin", "Leopard3", "Heat", "Thunderbird", "Grace", "D3", "Flick"] },
     { id: "woods", name: "Woods", description: "Tighter lines, shaping, and clean control.", discQueries: ["Pure", "Hex", "Leopard3", "Teebird", "Zone"] },
     { id: "open", name: "Open", description: "More distance and a little more headroom.", discQueries: ["Aviar", "Buzzz", "Teebird", "Thunderbird", "Grace", "Destroyer", "Firebird"] },
     { id: "windy", name: "Windy Day", description: "A bag that stands up when the air gets ugly.", discQueries: ["Zone", "Harp", "Roc3", "Thunderbird", "Firebird", "Felon", "Force"] },
@@ -24010,13 +24298,13 @@
     };
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "fade-up", children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { className: "text-3xl font-bold tracking-tight mb-1", children: "Build My Bag" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-4", children: "Start from your demo bag or a template, shape the bag, then save it when it feels right." }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { className: "text-white/50 mb-4", children: "Start from your current bag or a template, shape the bag, then save it when it feels right." }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Glass, { className: "px-5 py-4 mb-4", children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40 mb-2", children: "How this works" }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "grid gap-2 text-sm text-white/70", children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-white/40 mr-2", children: "1." }),
-            " Start with your demo bag, one of the starter templates, or an empty bag."
+            " Start with your current bag, one of the starter templates, or an empty bag."
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "text-white/40 mr-2", children: "2." }),
@@ -24032,7 +24320,7 @@
         /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "flex items-center justify-between gap-3 mb-3", children: [
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: [
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-xs uppercase tracking-widest text-white/40", children: "Starting point" }),
-            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-sm text-white/55 mt-0.5", children: "Your demo bag is always at the top, with other templates below it." })
+            /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "text-sm text-white/55 mt-0.5", children: "Your current bag is always at the top, with other templates below it." })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", { value: templateName, onChange: (e) => setTemplateName(e.target.value), placeholder: "Template name", className: "w-36 sm:w-44 px-3 py-2 rounded-2xl bg-white/5 border border-white/15 text-white text-sm placeholder-white/30 outline-none" })
         ] }),
