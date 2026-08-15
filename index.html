@@ -22111,6 +22111,7 @@
     { id: "pro", label: "Pro", ft: 400 }
   ];
   var DEFAULT_ARM_FT = 300;
+  var BAG_STORAGE_KEY = "bag-discs-v2";
   function scaleFt(v, factor) {
     return Math.round(v * factor / 5) * 5;
   }
@@ -22683,7 +22684,7 @@
           return;
         }
         try {
-          const res = await window.storage.get("bag-discs", false);
+          const res = await window.storage.get(BAG_STORAGE_KEY, false);
           if (cancelled) return;
           const parsed = res && res.value ? JSON.parse(res.value) : null;
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -22691,9 +22692,14 @@
             setBagSynced(true);
             setOnboarding(false);
           } else {
+            setBag(DISCS);
+            setBagSynced(true);
+            if (window.storage) await window.storage.set(BAG_STORAGE_KEY, JSON.stringify(DISCS), false);
             setOnboarding(true);
           }
         } catch {
+          setBag(DISCS);
+          setBagSynced(true);
           setOnboarding(true);
         }
       })();
@@ -22766,7 +22772,7 @@
       setBag(next);
       if (typeof window === "undefined" || !window.storage) return;
       try {
-        await window.storage.set("bag-discs", JSON.stringify(next), false);
+        await window.storage.set(BAG_STORAGE_KEY, JSON.stringify(next), false);
         setBagSynced(true);
       } catch {
       }
