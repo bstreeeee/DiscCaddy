@@ -22143,6 +22143,16 @@
     { id: "strongLeft", label: "Strong Finish Left", glyph: "hook-left" },
     { id: "extremeLeft", label: "Extreme Left", glyph: "hook-left" }
   ];
+  var CONDITIONS = [
+    { id: "open", label: "Open fairway", glyph: "wind" },
+    { id: "woods", label: "Tight woods", glyph: "trees" },
+    { id: "headwind", label: "Headwind", glyph: "wind" },
+    { id: "tailwind", label: "Tailwind", glyph: "wind" },
+    { id: "lowCeiling", label: "Low ceiling", glyph: "arrow-up" },
+    { id: "avoidRight", label: "Need to avoid going right", glyph: "arrow-nw" },
+    { id: "avoidLeft", label: "Need to avoid going left", glyph: "arrow-ne" },
+    { id: "recovery", label: "Obstacle / recovery shot", glyph: "trees" }
+  ];
   function shapeLabel(id) {
     const match = SHAPES.find((s) => s.id === id);
     return match ? match.label : "Shot shape";
