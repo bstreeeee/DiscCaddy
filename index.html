@@ -22119,6 +22119,10 @@
     if (factor === 1) return d;
     return { ...d, sweetMin: scaleFt(d.sweetMin, factor), sweetMax: scaleFt(d.sweetMax, factor), maxDist: scaleFt(d.maxDist, factor) };
   }
+  function isCurrentBag(bag) {
+    const ids = new Set((bag || []).map((d) => d && d.id).filter(Boolean));
+    return ["pure", "pa5", "a5", "a3", "a2", "origin", "leopard3", "heat", "thunderbird", "grace", "d3", "flick"].every((id) => ids.has(id));
+  }
   var BASE_DISTANCES = [
     { id: "short", label: "Short", dot: "#4ADE80", baseMin: 0, baseMax: 180, baseMid: 140 },
     { id: "medium", label: "Medium", dot: "#FBBF24", baseMin: 180, baseMax: 250, baseMid: 215 },
@@ -22687,7 +22691,7 @@
           const res = await window.storage.get(BAG_STORAGE_KEY, false);
           if (cancelled) return;
           const parsed = res && res.value ? JSON.parse(res.value) : null;
-          if (Array.isArray(parsed) && parsed.length > 0) {
+          if (Array.isArray(parsed) && parsed.length > 0 && isCurrentBag(parsed)) {
             setBag(parsed);
             setBagSynced(true);
             setOnboarding(false);
@@ -22695,12 +22699,12 @@
             setBag(DISCS);
             setBagSynced(true);
             if (window.storage) await window.storage.set(BAG_STORAGE_KEY, JSON.stringify(DISCS), false);
-            setOnboarding(true);
+            setOnboarding(false);
           }
         } catch {
           setBag(DISCS);
           setBagSynced(true);
-          setOnboarding(true);
+          setOnboarding(false);
         }
       })();
       return () => {
